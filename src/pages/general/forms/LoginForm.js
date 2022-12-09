@@ -16,7 +16,7 @@ import ReactInputMask from 'react-input-mask';
 import LoadingFormButton from 'src/components/misc/Buttons/LoadingFormButton';
 import { LoginSchema, LoginSchemaStudent } from 'src/config/form-schemas';
 import { CNICIcon, EmailIcon, HidePasswordIcon, PasswordIcon, ShowPasswordIcon } from 'src/config/icons';
-import { RouteForgetPass } from 'src/config/routes';
+import { RouteForgetPass, RouteMenu } from 'src/config/routes';
 import coordinatorService from 'src/services/CoordinatorService';
 import studentService from 'src/services/StudentService';
 import teacherService from 'src/services/TeacherService';
@@ -52,7 +52,7 @@ export default ({ }) => {
 
 			funToCall(values.ID.replaceAll(' ', ''), values.Password)
 				.then((_data) => {
-					navigate(location.state?.from ? location.state.from : "../dashboard", { replace: true });
+					navigate(location.state?.from ? location.state.from : RouteMenu, { replace: true });
 				})
 				.catch((err) => {
 					setSubmitting(false);

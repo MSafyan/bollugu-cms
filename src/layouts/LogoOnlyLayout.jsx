@@ -7,6 +7,7 @@ import { useState } from 'react';
 import Auth from 'src/components/authentication/login/Auth';
 import TitleResponsive from 'src/components/misc/TitleResponsive';
 import Logo from '../components/Logo';
+import { RouteMenu } from 'src/config/routes';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +38,7 @@ export default function LogoOnlyLayout({
 
   const handleOnAuth = (pass) => {
     if (!pass) return setShowPage(true);
-    return navigate('./dashboard');
+    return navigate(RouteMenu);
   };
 
   return (

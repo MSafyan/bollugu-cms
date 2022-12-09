@@ -1,4 +1,4 @@
-import { Navigate, useRoutes } from 'react-router-dom';
+import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
@@ -32,6 +32,7 @@ import Profile from './pages/general/Profile';
 import ResetPassword from './pages/general/ResetPassword';
 import Settings from './pages/general/Settings';
 import MenuItems from './pages/admins/MenuItems';
+import MenuItem from './pages/general/MenuItem';
 
 
 
@@ -48,7 +49,13 @@ export default function Router() {
       path: RouteLandingPage,
       element: <DashboardLayout adminLogin />,
       children: [
-        { path: 'menu', element: <MenuItems /> },
+        {
+          path: 'menu', element: <Outlet />, children: [
+            { path: '', element: <MenuItems /> },
+            { path: ':id', element: <MenuItem /> },
+          ]
+        },
+
 
         { path: 'profile', element: <Profile /> },
         //{ path: '/tsearch', element: <TeacherSearch /> },

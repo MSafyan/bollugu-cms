@@ -35,3 +35,5 @@ export const acceptImageUpload = "image/png, image/jpg, image/jpeg";
 export const acceptFileUpload = "image/png, image/jpg, image/jpeg, audio/mp3, application/pdf, application/zip, application/doc, application/docx, application/ppt, application/pptx, application/txt";
 export const maxUploadFileSize = 10 * 1024 * 1024; //10 Mbs
 export const hideFileAlertIn = 3000;
+
+export const Days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];

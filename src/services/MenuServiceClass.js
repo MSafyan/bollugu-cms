@@ -45,6 +45,22 @@ class MenuService extends GenericService {
     }
   );
 
+  getOne = (id) => new Promise(
+    (resolve, reject) => {
+      const query = qs.stringify(
+        {
+          populate: "*"
+        });
+      this.get(`menu-items/${id}?${query}`)
+
+        .then((response) => {
+          console.log("Menu Item", this.extractData(response.data));
+          resolve(this.extractData(response.data))
+        })
+        .catch((err) => reject(err));
+    }
+  );
+
 
   addCoordinator = ((coordinator, title, body, url, showOn) =>
     Promise.resolve(this.post(`Menu`, {

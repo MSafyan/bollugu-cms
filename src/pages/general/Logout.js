@@ -23,7 +23,7 @@ export default () => {
 	*/
 	const handleLogout = () => {
 		userService.logout();
-		navigator('/', { replace: true });
+		navigator('/login', { replace: true });
 	};
 
 	/*

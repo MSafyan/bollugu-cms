@@ -15,6 +15,8 @@ import Page from '../../components/Page';
 import ServerError from 'src/components/misc/alerts/ServerError';
 import menuService from 'src/services/MenuServiceClass';
 import ItemCard from 'src/components/misc/cards/ItemCard';
+import FloatingAdd from 'src/components/misc/Buttons/FloatingAdd';
+import { useNavigate } from 'react-router-dom';
 
 const SortingOptions = [
   { value: 'idDESC', option: 'createdAt', order: 'DESC', label: 'Newest' },
@@ -37,9 +39,15 @@ export default ({ }) => {
 
   let searched = false;
 
+  const navigate = useNavigate();
+
   /*
     Handlers, Functions
   */
+
+  const handleAddButton = () => {
+    navigate('./add');
+  };
   const getData = () => {
     if (searched)
       return;
@@ -105,7 +113,7 @@ export default ({ }) => {
                       price,
                       description,
                       image: image?.url || DefaultFood,
-                      to: `./../${id}`
+                      to: `./${id}`
                     };
                     return (
                       <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -126,6 +134,7 @@ export default ({ }) => {
         <ServerError open={!!searchUsed && menuItems.length < 1} severity="warning">
           No menu items found matching your search.
         </ServerError>
+        <FloatingAdd tooltip='Add new item' onClick={handleAddButton} />
       </Container>
     </Page >
   );
