@@ -25,8 +25,8 @@ export const ForgetSchema = Yup.object().shape({
 export const LoginSchema = Yup.object().shape({
 	ID:
 		Yup.string()
-			.required('CNIC is required')
-			.matches(cnicRegExp, 'Valid CNIC is required'),
+			.required('Email is required')
+			.email('Valid Email is required'),
 	Password:
 		Yup.string()
 			.required('Password is required')

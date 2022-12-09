@@ -34,6 +34,7 @@ export default function AuthLayout({ children, image }) {
         {/* <RouterLink to="/"> */}
         <Logo />
         {/* </RouterLink> */}
+
         <MHidden width="smDown">
           <Typography
             variant="body2"

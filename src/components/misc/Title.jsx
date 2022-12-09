@@ -5,7 +5,7 @@ const style = {
   fontFamily: 'Public Sans,sans-serif',
   fontSize: '10px',
   textAlign: 'center',
-  paddingTop: '120px',
+  paddingTop: '140px',
   paddingLeft: '20px'
 };
 

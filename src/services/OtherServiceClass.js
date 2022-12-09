@@ -33,6 +33,7 @@ class OtherServiceClass extends GenericService {
     const { id, attributes } = data;
     const { name, ext, url, createdAt } = attributes;
 
+    console.log("Image ", attributes);
     return {
       id,
       name,

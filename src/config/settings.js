@@ -1,16 +1,16 @@
-export const TITLE = 'ISDP';
-export const fullTitle = 'Intensive Software Development Program';
+export const TITLE = 'Chez Chef';
+export const fullTitle = 'Chez Chef - Chef Portal';
 export const defaultPassword = '123456';
 export const defaultCoordinatortPassword = defaultPassword;
 export const defaultTeacherPassword = defaultPassword;
 export const defaultStudentPassword = defaultPassword;
 export const rowsPerPageList = [10, 15, 30, 50, 100];
 export const defaultPerPage = 10;
-export const BackendURL = 'https://isdp.backend.eastdevs.com/';
-export const BackendURLAPI = 'https://isdp.backend.eastdevs.com/api/';
+export const BackendURL = 'https://chezchef.herokuapp.com/';
+export const BackendURLAPI = 'https://chezchef.herokuapp.com/api/';
 
 
-export const AdminLoginImage = "/static/illustrations/Admin.png";
+export const LoginImage = "/static/illustrations/Chef.gif";
 export const CoordinatorLoginImage = "/static/illustrations/coordinator.png";
 export const TeacherLoginImage = "/static/illustrations/teacher.png";
 export const StudentLoginImage = "/static/illustrations/student.png";
@@ -21,6 +21,8 @@ export const Image401 = "/static/illustrations/401.webp";
 export const DefaultAvatar = '/static/mock-images/avatars/islamicavatar.png';
 export const DefaultUploadedFileImage = '/static/icons/file.png';
 export const NotificationSound = '/static/sounds/notification.mp3';
+
+export const DefaultFood = '/static/illustrations/missingfood.jpg';
 
 
 export const NotificationReload = 1000 * 30;

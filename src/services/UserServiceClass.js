@@ -6,7 +6,7 @@ import { RailFenceSize } from 'src/config/settings';
 class UserService extends GenericService {
   constructor() {
     super();
-    this.populate = ['image', 'contact.city'];
+    this.populate = '*';
     this.query = qs.stringify({
       populate: this.populate
     });
@@ -58,6 +58,27 @@ class UserService extends GenericService {
           reject(err);
         });
     });
+
+  extractDataDirect(u) {
+    // const { contact, image: img, } = u;
+    // let phone, address, city, province, city_id;
+    // let image = undefined;
+    // let imageID;
+    // const { id: u_id, username, name, email, blocked, dob, gender } = u;
+    // if (contact?.id) {
+    //   let city_object;
+    //   ({ phone, address, city: city_object } = contact);
+    //   ({ name: city, province, id: city_id } = city_object);
+    // }
+    // if (img) {
+    //   image = img.url;
+    //   imageID = img.id;
+    // }
+
+    return {
+      ...u
+    };
+  }
   register = (name, email, password) => this.post('users/register', { password, email, name });
 
   logout = () => {
@@ -227,39 +248,45 @@ class UserService extends GenericService {
     };
   }
 
-  extractDataDirect(u) {
-    const { contact, image: img, } = u;
-    let phone, address, city, province, city_id;
-    let image = undefined;
-    let imageID;
-    const { id: u_id, username, name, email, blocked, dob, gender } = u;
-    if (contact?.id) {
-      let city_object;
-      ({ phone, address, city: city_object } = contact);
-      ({ name: city, province, id: city_id } = city_object);
-    }
-    if (img) {
-      image = img.url;
-      imageID = img.id;
-    }
+  login = (ID, Password) =>
+    new Promise((resolve, reject) => {
+      this.loginUser(ID, Password)
+        .then(() => {
+          const query = qs.stringify(
+            {
+              populate: '*'
+            }
+          );
+          this.get(`users/me?${query}`)
+            .then((response) => {
+              console.log("Response", response);
+              if (response.role.name.toLowerCase() == "chef") {
+                let user = { ...this.extractDataDirect(response), isAdmin: true };
+                const encoded = railfencecipher.encodeRailFenceCipher(railfencecipher.encodeRailFenceCipher(JSON.stringify(user), RailFenceSize + 1), RailFenceSize);
+                localStorage.setItem('user', encoded);
+                resolve(user);
+              }
+              else {
+                localStorage.removeItem('token');
+                reject({ message: "User is not a Chef" });
+              }
 
-    return {
-      u_id,
-      username,
-      name,
-      email,
-      blocked,
-      phone,
-      image,
-      imageID,
-      gender,
-      address,
-      city,
-      city_id,
-      province,
-      dob,
-    };
-  }
+            })
+            .catch((err) => {
+              localStorage.removeItem('token');
+              reject(err);
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+
+  reAsignUser = (u) => {
+    let user = { ...u, isAdmin: true };
+    const encoded = railfencecipher.encodeRailFenceCipher(railfencecipher.encodeRailFenceCipher(JSON.stringify(user), RailFenceSize + 1), RailFenceSize);
+    localStorage.setItem('user', encoded);
+  };
 
   settingsUpdate = ((name, email, password, dob, gender, contact, image, u_id) =>
     this.updateUser(u_id, name, email, password, dob, gender, contact, image));

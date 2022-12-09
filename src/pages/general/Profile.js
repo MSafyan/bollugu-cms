@@ -7,7 +7,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import CenterLoading from 'src/components/misc/CenterLoading';
 import Dialog from 'src/components/misc/alerts/Dialog';
-import adminService from 'src/services/AdminService';
 import coordinatorService from 'src/services/CoordinatorService';
 import studentService from 'src/services/StudentService';
 import teacherService from 'src/services/TeacherService';
@@ -57,21 +56,7 @@ export default () => {
         navigate('/404');
       });
     let funcToCall = userService.getLoggedInUser;
-    if (userID) {
-      setSameUser(false);
-      funcToCall = adminService.find;
-      switch (userType) {
-        case 'coordinators':
-          funcToCall = coordinatorService.find;
-          break;
-        case 'teachers':
-          funcToCall = teacherService.find;
-          break;
-        case 'students':
-          funcToCall = studentService.find;
-          break;
-      }
-    }
+
     funcToCall(userID)
       .then((u) => {
         setUser(u);

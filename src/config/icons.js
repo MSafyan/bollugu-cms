@@ -36,6 +36,9 @@ import booksFill from '@iconify/icons-ph/books-fill';
 import studentBold from '@iconify/icons-ph/student-bold';
 import password1Icon from '@iconify/icons-wpf/password1';
 import announcementIcon from '@iconify/icons-zondicons/announcement';
+import personFill from '@iconify/icons-eva/person-fill';
+import foodMenu from '@iconify/icons-bx/food-menu';
+import fastFoodOutline from '@iconify/icons-ion/fast-food-outline';
 
 export const ViewIcon = accountEye;
 export const ViewIcon2 = eyeFill;
@@ -80,3 +83,8 @@ export const GradeIcon = gradeList;
 export const MarksIcon = clipboardTaskList;
 export const AttendanceIcon = checkList;
 export const AnnouncementIcon = announcementIcon;
+
+
+export const ProfileIcon = personFill;
+export const MenuIcon = foodMenu;
+export const OrdersIcon = fastFoodOutline;

@@ -4,18 +4,23 @@ import {
   CoursesIcon,
   DashboardIcon,
   FeeIcon,
+  LockIcon,
   MadarisIcon,
+  MenuIcon,
+  OrdersIcon,
   PastClassesIcon,
+  ProfileIcon,
   StudentsIcon,
   TeachersIcon
 } from 'src/config/icons';
 
 import Cookies from 'js-cookie';
 import {
-  RouteAdminDashboard, RouteAdminFee,
+  RouteMenu, RouteAdminFee,
+  RouteAdminProfile,
   RouteCoordinatorFee, RouteCoordinators,
   RouteCourses,
-  RouteMadaris, RoutePastClasses, RouteSearchStudent,
+  RouteOrders, RoutePastClasses, RouteSearchStudent,
   RouteSearchTeacher, RouteStudentDashboard,
   RouteStudentResult, RouteTeacherDashboard
 } from 'src/config/routes';
@@ -25,75 +30,29 @@ const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
 export const sidebarConfig = {
   admin: [
     {
-      title: 'dashboard',
-      path: RouteAdminDashboard,
-      icon: getIcon(DashboardIcon)
+      title: 'Menu Items',
+      path: RouteMenu,
+      icon: getIcon(MenuIcon)
     },
     {
-      title: 'madaris',
-      path: RouteMadaris,
-      icon: getIcon(MadarisIcon)
+      title: 'Orders',
+      path: RouteOrders,
+      icon: getIcon(OrdersIcon)
     },
-    {
-      title: 'coodinators',
-      path: RouteCoordinators,
-      icon: getIcon(CoordinatorsIcon)
-    },
-    {
-      title: 'courses',
-      path: RouteCourses,
-      icon: getIcon(CoursesIcon)
-    },
-    {
-      title: 'find students',
-      path: RouteSearchStudent,
-      icon: getIcon(StudentsIcon)
-    },
-    {
-      title: 'find teachers',
-      path: RouteSearchTeacher,
-      icon: getIcon(TeachersIcon)
-    },
-    {
-      title: 'fee',
-      path: RouteAdminFee,
-      icon: getIcon(FeeIcon)
-    }
-  ],
-  coordinator: [
-    {
-      title: 'fee',
-      path: RouteCoordinatorFee,
-      icon: getIcon(FeeIcon)
-    }
+
   ],
 
-  teacher: [
-    {
-      title: 'dashboard',
-      path: RouteTeacherDashboard,
-      icon: getIcon(DashboardIcon)
-    },
-    {
-      title: 'past classes',
-      path: RoutePastClasses,
-      icon: getIcon(PastClassesIcon)
-    },
-  ],
-  student: [
-    {
-      title: 'dashboard',
-      path: RouteStudentDashboard,
-      icon: getIcon(DashboardIcon)
-    },
-    {
-      title: 'result',
-      path: RouteStudentResult,
-      icon: getIcon(PastClassesIcon)
-    },
-  ],
   general: [
-
+    {
+      title: 'Profile',
+      path: RouteAdminProfile,
+      icon: getIcon(ProfileIcon)
+    },
+    {
+      title: 'Logout',
+      path: '/logout',
+      icon: getIcon(LockIcon)
+    },
   ]
 };
 

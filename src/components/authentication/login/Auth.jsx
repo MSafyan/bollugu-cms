@@ -1,7 +1,7 @@
 import React from 'react';
 import userService from '../../../services/UserService';
 
-export default function Auth({ admin, coordinator, teacher, student, children, onAuth }) {
+export default function Auth({ admin, onAuth, children }) {
   const gotoLogin = () => {
     onAuth(false);
   };
@@ -10,22 +10,12 @@ export default function Auth({ admin, coordinator, teacher, student, children, o
     if (admin) {
       if (user.isAdmin) return onAuth(true);
     }
-    if (coordinator) {
-      if (user.isCoordinator) return onAuth(true);
-    }
 
-    if (teacher) {
-      if (user.isTeacher) return onAuth(true);
-    }
-
-    if (student) {
-      if (user.isStudent) return onAuth(true);
-    }
     onAuth(false);
   };
 
   const moveForward = () => {
-    if (admin || coordinator || teacher || student) {
+    if (admin) {
       userService.getLoggedInUser().then(loggedIn).catch(gotoLogin);
       return;
     }

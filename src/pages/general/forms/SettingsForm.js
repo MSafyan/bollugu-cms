@@ -15,7 +15,6 @@ import { SettingsSchema } from 'src/config/form-schemas';
 import { HidePasswordIcon, PasswordIcon, ShowPasswordIcon } from 'src/config/icons';
 import { acceptImageUpload, DefaultAvatar } from 'src/config/settings';
 import { DashboardContext } from 'src/layouts/dashboard';
-import adminService from 'src/services/AdminService';
 import AlertSnackbar from 'src/components/misc/alerts/AlertSnackbar';
 import coordinatorService from 'src/services/CoordinatorService';
 import studentService from 'src/services/StudentService';
@@ -78,7 +77,7 @@ export default ({ cities, loggedInUser }) => {
 
   const addData = () => {
 
-    let serviceToCall = adminService;
+    let serviceToCall = userService;
 
     if (loggedInUser.isCoordinator)
       serviceToCall = coordinatorService;
@@ -134,7 +133,7 @@ export default ({ cities, loggedInUser }) => {
     else {
       if (userID) {
         setSameUser(false);
-        funcToCall = adminService.find;
+        funcToCall = userService.find;
         switch (userType) {
           case 'coordinator':
             funcToCall = coordinatorService.find;

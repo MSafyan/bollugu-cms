@@ -4,10 +4,7 @@
 import { Stack, Typography } from '@material-ui/core';
 import LogoOnlyBody from 'src/components/misc/LogoOnlyBody';
 import {
-  AdminLoginImage,
-  CoordinatorLoginImage,
-  StudentLoginImage,
-  TeacherLoginImage
+  LoginImage,
 } from 'src/config/settings';
 import { RootStyle } from 'src/theme/logo-only-pages';
 import palette from 'src/theme/palette';
@@ -16,23 +13,10 @@ import LoginForm from './forms/LoginForm';
 /*
   Main Working
 */
-export default ({ admin, coordinator, teacher, student }) => {
-  let loginDisplay = 'Admin';
-  let image = AdminLoginImage;
-  if (coordinator) {
-    loginDisplay = 'Coordinator';
-    image = CoordinatorLoginImage;
-  }
+export default ({ }) => {
+  let loginDisplay = 'Chef';
+  let image = LoginImage;
 
-  if (teacher) {
-    loginDisplay = 'Teacher';
-    image = TeacherLoginImage;
-  }
-
-  if (student) {
-    loginDisplay = 'Student';
-    image = StudentLoginImage;
-  }
 
   return (
     <RootStyle title={loginDisplay}>
@@ -45,7 +29,7 @@ export default ({ admin, coordinator, teacher, student }) => {
             Enter Your Login Details Below.
           </Typography>
         </Stack>
-        <LoginForm admin={admin} coordinator={coordinator} teacher={teacher} student={student} />
+        <LoginForm />
       </LogoOnlyBody>
     </RootStyle>
   );

@@ -13,8 +13,8 @@ export default function Logo({ sx }) {
     <Box
       margin="auto"
       component="img"
-      src="/static/ISDP.png"
-      sx={{ width: 180, height: 59.5, ...sx }}
+      src="/static/LOGO.webp"
+      sx={{ width: 180, height: '100%', ...sx }}
     />
   );
 }

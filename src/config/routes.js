@@ -1,15 +1,15 @@
-export const RouteMadaris = '/admin/madaris';
-export const RouteCoordinators = '/admin/coordinators';
-export const RouteCourses = '/admin/courses';
+export const RouteOrders = '/madaris';
+export const RouteCoordinators = '/coordinators';
+export const RouteCourses = '/courses';
 export const RouteLandingPage = '/';
 export const RouteForgetPass = '/forget';
 export const RouteResetPass = '/reset';
-export const RouteAdminDashboard = '/admin/dashboard';
-export const RouteSearchStudent = '/admin/students/search';
-export const RouteSearchTeacher = '/admin/teachers/search';
-export const RouteAdminFee = '/admin/fee';
-export const RouteAdminSetting = '/admin/settings';
-export const RouteAdminProfile = '/admin/profile';
+export const RouteMenu = '/menu';
+export const RouteSearchStudent = '/students/search';
+export const RouteSearchTeacher = '/teachers/search';
+export const RouteAdminFee = '/fee';
+export const RouteAdminSetting = '/settings';
+export const RouteAdminProfile = '/profile';
 
 
 export const RouteCoordinatorSettings = '/coordinator/settings';
@@ -22,7 +22,7 @@ export const RoutePastClasses = '/teacher/past';
 export const RouteTeacherProfile = '/teacher/profile';
 export const RouteTeacherSettings = '/teacher/settings';
 
-export const RouteAdminLogin = '/admin/login';
+export const RouteAdminLogin = '/login';
 export const RouteCoordinatorLogin = '/coordinator/login';
 export const RouteTeacherLogin = '/teacher/login';
 export const RouteStudentLogin = '/student/login';

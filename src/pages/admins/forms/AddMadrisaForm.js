@@ -33,7 +33,7 @@ import LoadingFormButton from 'src/components/misc/Buttons/LoadingFormButton';
 import ServerError from 'src/components/misc/alerts/ServerError';
 import { provinces } from 'src/config/data';
 import { AddMadrisaSchema } from 'src/config/form-schemas';
-import { RouteMadaris } from 'src/config/routes';
+import { RouteOrders } from 'src/config/routes';
 import MadrisaService from 'src/services/MadrisaService';
 import notificationService from 'src/services/NotificationService';
 
@@ -129,7 +129,7 @@ export default ({ coordinators, cities, editing }) => {
 
 	const handleClose = () => {
 		setOpenDia(false);
-		navigate(RouteMadaris);
+		navigate(RouteOrders);
 	};
 
 	const handleEditing = () => {
