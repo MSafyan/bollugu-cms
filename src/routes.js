@@ -3,12 +3,7 @@ import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 
-
-import {
-  RouteForgetPass,
-  RouteLandingPage,
-  RouteResetPass
-} from './config/routes';
+import { RouteForgetPass, RouteLandingPage, RouteResetPass } from './config/routes';
 
 import AdminAddCoordinator from './pages/admins/AddCoordinator';
 import AdminAddCourse from './pages/admins/AddCourse';
@@ -34,12 +29,13 @@ import Settings from './pages/general/Settings';
 import MenuItems from './pages/admins/MenuItems';
 import MenuItem from './pages/general/MenuItem';
 
-
-
-
-
 export default function Router() {
   return useRoutes([
+    {
+      path: RouteLandingPage,
+      element: <LogoOnlyLayout adminLogin loginPage />,
+      children: [{ path: '/', element: <Login admin /> }]
+    },
     {
       path: RouteLandingPage,
       element: <LogoOnlyLayout adminLogin loginPage />,
@@ -50,12 +46,13 @@ export default function Router() {
       element: <DashboardLayout adminLogin />,
       children: [
         {
-          path: 'menu', element: <Outlet />, children: [
+          path: 'menu',
+          element: <Outlet />,
+          children: [
             { path: '', element: <MenuItems /> },
-            { path: ':id', element: <MenuItem /> },
+            { path: ':id', element: <MenuItem /> }
           ]
         },
-
 
         { path: 'profile', element: <Profile /> },
         //{ path: '/tsearch', element: <TeacherSearch /> },
