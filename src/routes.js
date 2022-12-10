@@ -24,6 +24,7 @@ import Profile from './pages/general/Profile';
 import ResetPassword from './pages/general/ResetPassword';
 import Settings from './pages/general/Settings';
 import Orders from './pages/admins/Orders';
+import Success from './pages/general/Success';
 
 
 
@@ -69,6 +70,7 @@ export default function Router() {
       element: <LogoOnlyLayout />,
       children: [
         { path: 'logout', element: <Logout /> },
+        { path: 'complete', element: <Success /> },
         { path: '404', element: <PageError e404 /> },
         { path: '401', element: <PageError /> },
         { path: '*', element: <Navigate to="/404" /> },

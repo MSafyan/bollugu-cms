@@ -294,13 +294,32 @@ class UserService extends GenericService {
   settingsUpdate = ((name, email, password, dob, gender, contact, image, u_id) =>
     this.updateUser(u_id, name, email, password, dob, gender, contact, image));
 
-  lock = (ID) => this.put(`users/${ID}`, {
-    blocked: true
-  });
+  checkOnBoarding = () => new Promise(
+    (resolve, reject) => {
+      this.get(`wallets/connectedAccount`)
+        .then((response) => {
+          if (response.data?.attributes?.accountLink) {
+            resolve({ onboarding: false, url: response.data.attributes.accountLink });
+          }
+          else {
+            this.get(`wallets/loginToStripe`).then((response) => {
+              resolve({ onboarding: true, url: response.url });
+            }).catch((err) => reject(err));
+          }
+        })
+        .catch((err) => reject(err));
+    }
+  );
 
-  unlock = (ID) => this.put(`users/${ID}`, {
-    blocked: false
-  });
+  completeOnBoarding = () => new Promise(
+    (resolve, reject) => {
+      this.get(`wallets/boardingSuccess`)
+        .then(() => {
+          resolve()
+        })
+        .catch((err) => reject(err));
+    }
+  );
 }
 
 export default UserService;
