@@ -15,7 +15,6 @@ import { SettingsSchema } from 'src/config/form-schemas';
 import { HidePasswordIcon, PasswordIcon, ShowPasswordIcon } from 'src/config/icons';
 import { RouteAdminProfile } from 'src/config/routes';
 import { acceptFileUpload, acceptImageUpload, Cities, cuisines, DefaultAvatar, DefaultUploadedFileImage } from 'src/config/settings';
-import coordinatorService from 'src/services/CoordinatorService';
 import userService from 'src/services/UserService';
 import { ContentStyle, FormTheme } from '../../../theme/form-pages';
 
@@ -112,7 +111,7 @@ export default ({ user }) => {
     setwrongImageFile(false);
     setImageUrl(null);
     if (selectedImage) {
-      coordinatorService.upload(selectedImage, values.firstName, null)
+      userService.upload(selectedImage, values.firstName, null)
         .then((response) => {
           setImageID(response.data[0].id);
           setImageUrl(URL.createObjectURL(selectedImage));
@@ -133,7 +132,7 @@ export default ({ user }) => {
     setwrongInsFile(false);
     setinsuranceUrl(null);
     if (selectedIns) {
-      coordinatorService.upload(selectedIns, values.firstName + "-insurance", null)
+      userService.upload(selectedIns, values.firstName + "-insurance", null)
         .then((response) => {
           setinsuranceID(response.data[0].id);
           setinsuranceUrl(URL.createObjectURL(selectedIns));
@@ -154,7 +153,7 @@ export default ({ user }) => {
     setWrongCertificateFile(false);
     setcertificateUrl(null);
     if (selectedCertificate) {
-      coordinatorService.upload(selectedCertificate, values.firstName + "-certificate", null)
+      userService.upload(selectedCertificate, values.firstName + "-certificate", null)
         .then((response) => {
           setcertificateID(response.data[0].id);
           setcertificateUrl(URL.createObjectURL(selectedCertificate));

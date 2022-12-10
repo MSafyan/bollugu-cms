@@ -1,11 +1,9 @@
 import menu2Fill from '@iconify/icons-eva/menu-2-fill';
 import { Icon } from '@iconify/react';
-import { AppBar, Box, IconButton, Stack, Toolbar } from '@material-ui/core';
+import { AppBar, Box, IconButton, Toolbar } from '@material-ui/core';
 import { alpha, styled } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { MHidden } from '../../components/@material-extend';
-import AccountPopover from './AccountPopover';
-import NotificationsPopover from './NotificationsPopover';
 
 const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;
@@ -44,10 +42,6 @@ export default function DashboardNavbar({ isAdmin, onOpenSidebar }) {
           </IconButton>
         </MHidden>
         <Box sx={{ flexGrow: 1 }} />
-
-        {/* <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
-          <AccountPopover />
-        </Stack> */}
       </ToolbarStyle>
     </RootStyle>
   );

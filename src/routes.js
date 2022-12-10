@@ -10,11 +10,10 @@ import {
   RouteResetPass
 } from './config/routes';
 
-import AdminAddCoordinator from './pages/admins/AddCoordinator';
 
 import AddMenuItem from './pages/admins/AddMenuItem';
 import MenuItems from './pages/admins/MenuItems';
-import OrdersList from './pages/admins/tables/OrdersList';
+import Orders from './pages/admins/Orders';
 import ForgetPassword from './pages/general/ForgetPassword';
 import Login from './pages/general/Login';
 import Logout from './pages/general/Logout';
@@ -23,7 +22,6 @@ import PageError from './pages/general/PageError';
 import Profile from './pages/general/Profile';
 import ResetPassword from './pages/general/ResetPassword';
 import Settings from './pages/general/Settings';
-import Orders from './pages/admins/Orders';
 import Success from './pages/general/Success';
 
 
@@ -52,15 +50,8 @@ export default function Router() {
           ]
         },
 
-
         { path: 'profile', element: <Profile /> },
-        //{ path: '/tsearch', element: <TeacherSearch /> },
         { path: 'settings', element: <Settings /> },
-        {
-          path: 'coordinators/:coordinatorID/edit',
-          element: <AdminAddCoordinator editing />
-        },
-
         { path: 'orders', element: <Orders /> },
       ]
     },
