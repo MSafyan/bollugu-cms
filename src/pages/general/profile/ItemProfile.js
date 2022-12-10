@@ -3,8 +3,9 @@
 */
 import { Grid, Typography } from '@material-ui/core';
 import ItemImage from 'src/components/misc/ItemImage';
+import { Days } from 'src/config/data';
 
-import { Days, DefaultFood } from 'src/config/settings';
+import { DefaultFood } from 'src/config/settings';
 
 /*
   Main Working

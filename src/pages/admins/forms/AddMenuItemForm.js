@@ -26,8 +26,9 @@ import { AddMenuItemSchema } from 'src/config/form-schemas';
 import { CurrencyIcon } from 'src/config/icons';
 import { RouteMenu } from 'src/config/routes';
 import menuService from 'src/services/MenuServiceClass';
-import { acceptImageUpload, Days } from '../../../config/settings';
+import { acceptImageUpload } from '../../../config/settings';
 import { ContentStyle, FormTheme } from '../../../theme/form-pages';
+import { Days } from 'src/config/data';
 
 
 /*

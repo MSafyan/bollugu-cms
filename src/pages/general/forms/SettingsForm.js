@@ -11,10 +11,11 @@ import { useNavigate } from 'react-router-dom';
 import AlertSnackbar from 'src/components/misc/alerts/AlertSnackbar';
 import Dialog from 'src/components/misc/alerts/Dialog';
 import LoadingFormButton from 'src/components/misc/Buttons/LoadingFormButton';
+import { Cities, cuisines } from 'src/config/data';
 import { SettingsSchema } from 'src/config/form-schemas';
 import { HidePasswordIcon, PasswordIcon, ShowPasswordIcon } from 'src/config/icons';
 import { RouteAdminProfile } from 'src/config/routes';
-import { acceptFileUpload, acceptImageUpload, Cities, cuisines, DefaultAvatar, DefaultUploadedFileImage } from 'src/config/settings';
+import { acceptFileUpload, acceptImageUpload, DefaultAvatar, DefaultUploadedFileImage } from 'src/config/settings';
 import userService from 'src/services/UserService';
 import { ContentStyle, FormTheme } from '../../../theme/form-pages';
 
