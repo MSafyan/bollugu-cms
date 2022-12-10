@@ -106,39 +106,15 @@ class GenericService {
     });
   }
 
-  deleteFile(file) {
-    return axios.delete(`upload/files/${file}`);
-  }
 
-
-
-  getTotalCount(response) {
-    const { meta } = response;
-    let count = 0;
-    if (meta) {
-      const { pagination } = meta;
-      if (pagination)
-        count = pagination.total;
-    }
-    return count;
-  }
 
   download(url, name) {
-    axios({
-      url,
-      method: 'GET',
-      responseType: 'blob'
-    })
-      .then((response) => {
-        const url_ = window.URL
-          .createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url_;
-        link.setAttribute('download', name);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      });
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', name);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }
 export default GenericService;

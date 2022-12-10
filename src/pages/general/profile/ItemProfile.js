@@ -3,8 +3,9 @@
 */
 import { Grid, Typography } from '@material-ui/core';
 import ItemImage from 'src/components/misc/ItemImage';
+import { Days } from 'src/config/data';
 
-import { Days, DefaultFood } from 'src/config/settings';
+import { DefaultFood } from 'src/config/settings';
 
 /*
   Main Working
@@ -22,7 +23,7 @@ export default ({ item }) => {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <ItemImage Image={image.url ?? DefaultFood} />
+          <ItemImage Image={image?.url ?? DefaultFood} />
         </Grid>
       </Grid>
       <Grid container spacing={0} style={{ paddingBottom: 20, paddingTop: 20 }}>

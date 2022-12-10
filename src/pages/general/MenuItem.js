@@ -6,19 +6,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import CenterLoading from 'src/components/misc/CenterLoading';
-import Dialog from 'src/components/misc/alerts/Dialog';
-import coordinatorService from 'src/services/CoordinatorService';
-import studentService from 'src/services/StudentService';
-import teacherService from 'src/services/TeacherService';
+import menuService from 'src/services/MenuServiceClass';
 import userService from 'src/services/UserService';
 import Page from '../../components/Page';
-import CoordinatorProfile from './profile/CoordinatorProfile';
-import ProfileOptions from './profile/ProfileOptions';
-import StudentResult from './profile/StudentResult';
-import TeacherProfile from './profile/TeacherProfile';
-import UserProfile from './profile/UserProfile';
-import menuService from 'src/services/MenuServiceClass';
 import ItemProfile from './profile/ItemProfile';
+import ProfileOptions from './profile/ProfileOptions';
 
 /*
   Main Working
@@ -32,7 +24,6 @@ export default () => {
   const [loading, setLoading] = useState(true);
   const [item, setItem] = useState({ name: '' });
 
-  const [showDelete, setShowDelete] = useState(false);
   const { name } = item;
 
   const ItemID = useParams().id;
@@ -63,26 +54,7 @@ export default () => {
     navigate(`./edit`);
   };
 
-  const handleDelete = () => {
-    if (isStudent) {
-      setShowDelete(true);
-    }
-  };
 
-  const handleClose = () => {
-    setShowDelete(false);
-  };
-
-  const handleDeleteFinal = () => {
-    studentService.
-      remove(item.id)
-      .then(() => {
-        navigate(-1);
-      })
-      .catch((_err) => {
-        //Error here.
-      });
-  };
 
   /*
     Use Effect Hooks.
@@ -99,27 +71,10 @@ export default () => {
       ) : (
         <Container maxWidth="xl">
           <ItemProfile item={item} />
-
-
-
-
           <ProfileOptions
             user={item}
-            // handleDelete={handleDelete}
             handleEdit={handleEdit}
           />
-
-          {/* <Dialog
-              error={item.classes.length <= 0}
-              warning={item.classes.length > 0}
-              buttonText={"Close"}
-              buttonText2={item.classes.length > 0 ? '' : 'Remove'}
-              openDialog={showDelete}
-              handleButton={handleClose}
-              handleButton2={handleDeleteFinal}
-            >
-              {item.classes.length > 0 ? `You can not delete a student who has been assgined to classes, please remove the student from classes first` : `Are you sure you want to remove?`}
-            </Dialog> */}
 
         </Container>
       )}

@@ -12,7 +12,7 @@ import Scrollbar from '../../components/Scrollbar';
 //
 import { fullTitle } from 'src/config/settings';
 import userService from 'src/services/UserService';
-import { getCoordinatorSideBar, sidebarConfig } from '../../config/SidebarConfig';
+import { sidebarConfig } from '../../config/SidebarConfig';
 
 // ----------------------------------------------------------------------
 
@@ -52,15 +52,6 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   }, [pathname]);
 
   let sidebar = sidebarConfig.admin;
-  if (user) {
-    if (user.isCoordinator)
-      sidebar = getCoordinatorSideBar(user);
-    if (user.isTeacher)
-      sidebar = sidebarConfig.teacher;
-    if (user.isStudent)
-      sidebar = sidebarConfig.student;
-  }
-
 
   const renderContent = (
     <Scrollbar

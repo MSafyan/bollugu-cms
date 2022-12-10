@@ -9,20 +9,15 @@ import {
 } from '@material-ui/core';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useState } from 'react';
-import NumberFormat from 'react-number-format';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 
-import ReactInputMask from 'react-input-mask';
-import LoadingFormButton from 'src/components/misc/Buttons/LoadingFormButton';
-import { LoginSchema, LoginSchemaStudent } from 'src/config/form-schemas';
-import { CNICIcon, EmailIcon, HidePasswordIcon, PasswordIcon, ShowPasswordIcon } from 'src/config/icons';
-import { RouteForgetPass, RouteMenu } from 'src/config/routes';
-import coordinatorService from 'src/services/CoordinatorService';
-import studentService from 'src/services/StudentService';
-import teacherService from 'src/services/TeacherService';
-import palette from 'src/theme/palette';
 import { Alert, Collapse } from '@mui/material';
+import LoadingFormButton from 'src/components/misc/Buttons/LoadingFormButton';
+import { LoginSchema } from 'src/config/form-schemas';
+import { EmailIcon, HidePasswordIcon, PasswordIcon, ShowPasswordIcon } from 'src/config/icons';
+import { RouteForgetPass, RouteMenu } from 'src/config/routes';
 import userService from 'src/services/UserService';
+import palette from 'src/theme/palette';
 
 /*
 	Main Working

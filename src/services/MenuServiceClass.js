@@ -1,6 +1,6 @@
 import qs from 'qs';
 import GenericService from './GenericService';
-import otherService from './OtherService';
+import otherService from './OtherServiceClass';
 
 class MenuService extends GenericService {
 
@@ -33,7 +33,9 @@ class MenuService extends GenericService {
     (resolve, reject) => {
       const query = qs.stringify(
         {
-          chef,
+          filters: {
+            chef
+          },
           populate: "*"
         });
       this.get(`menu-items?${query}`)
@@ -63,15 +65,14 @@ class MenuService extends GenericService {
   );
 
 
-  addCoordinator = ((coordinator, title, body, url, showOn) =>
-    Promise.resolve(this.post(`Menu`, {
-      data: {
-        coordinator,
-        title,
-        body,
-        url,
-        showOn: showOn ?? new Date()
-      }
+  add = ((data) =>
+    Promise.resolve(this.post(`menu-items`, {
+      data
+    })));
+
+  update = ((data, id) =>
+    Promise.resolve(this.put(`menu-items/${id}`, {
+      data
     })));
 
 

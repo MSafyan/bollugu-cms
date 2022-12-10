@@ -25,30 +25,18 @@ const HeaderStyle = styled('header')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function LogoOnlyLayout({
-  adminLogin,
-  coordinatorLogin,
-  teacherLogin,
-  studentLogin,
-  loginPage
-}) {
+export default function LogoOnlyLayout({ loginPage }) {
   const navigate = useNavigate();
 
   const [showPage, setShowPage] = useState(!loginPage);
 
   const handleOnAuth = (pass) => {
     if (!pass) return setShowPage(true);
-    return navigate(RouteMenu);
+    if (loginPage) return navigate(RouteMenu);
   };
 
   return (
-    <Auth
-      admin={adminLogin}
-      coordinator={coordinatorLogin}
-      teacher={teacherLogin}
-      student={studentLogin}
-      onAuth={handleOnAuth}
-    >
+    <Auth onAuth={handleOnAuth}>
       {showPage && (
         <>
           <HeaderStyle>

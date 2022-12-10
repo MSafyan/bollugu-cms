@@ -13,8 +13,8 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   borderRadius: '50%',
   alignItems: 'center',
-  width: theme.spacing(25),
-  height: theme.spacing(25),
+  width: theme.spacing(40),
+  height: theme.spacing(40),
   justifyContent: 'center',
   marginBottom: theme.spacing(3),
   color: theme.palette.primary.dark,
@@ -40,8 +40,9 @@ export default ({ Image, locked }) => {
           src={Image}
           sx={{
             borderRadius: '50%',
-            width: '90%',
-            height: '90%'
+            width: '95%',
+            height: '95%',
+            objectFit: 'cover'
           }}
         />
       </IconWrapperStyle>

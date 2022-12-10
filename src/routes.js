@@ -5,79 +5,47 @@ import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 
 import { RouteForgetPass, RouteLandingPage, RouteResetPass } from './config/routes';
 
-import AdminAddCoordinator from './pages/admins/AddCoordinator';
-import AdminAddCourse from './pages/admins/AddCourse';
-import AdminAddFee from './pages/admins/AddFee';
-import AdminAddMadrisa from './pages/admins/AddMadrisa';
-import AdminBatch from './pages/admins/Classes';
-import AdminCoordinators from './pages/admins/Coordinators';
-import AdminCourses from './pages/admins/Courses';
-import AdminDashboard from './pages/admins/Dashboard';
-import AdminFee from './pages/admins/Fee';
-import AdminMadaris from './pages/admins/Madaris';
-import AdminMadrisa from './pages/admins/Madrisa';
-import AdminSearch from './pages/admins/Search';
 
-import CourseContent from './pages/general/CourseContent';
+import AddMenuItem from './pages/admins/AddMenuItem';
+import MenuItems from './pages/admins/MenuItems';
+import Orders from './pages/admins/Orders';
 import ForgetPassword from './pages/general/ForgetPassword';
 import Login from './pages/general/Login';
 import Logout from './pages/general/Logout';
+import MenuItem from './pages/general/MenuItem';
 import PageError from './pages/general/PageError';
 import Profile from './pages/general/Profile';
 import ResetPassword from './pages/general/ResetPassword';
 import Settings from './pages/general/Settings';
-import MenuItems from './pages/admins/MenuItems';
-import MenuItem from './pages/general/MenuItem';
+import Success from './pages/general/Success';
 
 export default function Router() {
   return useRoutes([
     {
       path: RouteLandingPage,
-      element: <LogoOnlyLayout adminLogin loginPage />,
-      children: [{ path: '/', element: <Login admin /> }]
-    },
-    {
-      path: RouteLandingPage,
-      element: <LogoOnlyLayout adminLogin loginPage />,
+      element: <LogoOnlyLayout loginPage />,
       children: [{ path: 'login', element: <Login admin /> }]
     },
     {
       path: RouteLandingPage,
-      element: <DashboardLayout adminLogin />,
+      element: <DashboardLayout />,
       children: [
+        { path: '', element: <MenuItems /> },
         {
           path: 'menu',
           element: <Outlet />,
           children: [
             { path: '', element: <MenuItems /> },
-            { path: ':id', element: <MenuItem /> }
+            { path: ':id', element: <MenuItem /> },
+            { path: ':id/edit', element: <AddMenuItem editing /> },
+            { path: 'add', element: <AddMenuItem /> },
+
           ]
         },
 
         { path: 'profile', element: <Profile /> },
-        //{ path: '/tsearch', element: <TeacherSearch /> },
         { path: 'settings', element: <Settings /> },
-        {
-          path: 'coordinators/:coordinatorID/edit',
-          element: <AdminAddCoordinator editing />
-        },
-        { path: 'coordinators/add', element: <AdminAddCoordinator /> },
-        { path: 'coordinators', element: <AdminCoordinators /> },
-        { path: 'madaris/add', element: <AdminAddMadrisa /> },
-        { path: 'madaris/:mid/edit', element: <AdminAddMadrisa editing /> },
-        { path: 'madaris/:mid/:bid', element: <AdminBatch /> },
-        { path: 'madaris/:mid', element: <AdminMadrisa /> },
-
-        { path: 'madaris', element: <AdminMadaris /> },
-        { path: 'courses/add', element: <AdminAddCourse /> },
-        { path: 'courses/:courseID', element: <CourseContent /> },
-        { path: 'courses', element: <AdminCourses /> },
-        { path: 'addcourse', element: <AdminAddCourse /> },
-        { path: 'students/search', element: <AdminSearch /> },
-        { path: 'teachers/search', element: <AdminSearch isTeacher /> },
-        { path: ':type/:id', element: <Profile /> },
-        { path: 'fee', element: <AdminFee /> },
-        { path: 'fee/add', element: <AdminAddFee /> }
+        { path: 'orders', element: <Orders /> },
       ]
     },
 
@@ -86,6 +54,7 @@ export default function Router() {
       element: <LogoOnlyLayout />,
       children: [
         { path: 'logout', element: <Logout /> },
+        { path: 'complete', element: <Success /> },
         { path: '404', element: <PageError e404 /> },
         { path: '401', element: <PageError /> },
         { path: '*', element: <Navigate to="/404" /> },

@@ -2,6 +2,7 @@ import railfencecipher from 'railfencecipher';
 import qs from 'qs';
 import GenericService from './GenericService';
 import { RailFenceSize } from 'src/config/settings';
+import otherService from './OtherServiceClass';
 
 class UserService extends GenericService {
   constructor() {
@@ -60,26 +61,30 @@ class UserService extends GenericService {
     });
 
   extractDataDirect(u) {
-    // const { contact, image: img, } = u;
-    // let phone, address, city, province, city_id;
-    // let image = undefined;
-    // let imageID;
-    // const { id: u_id, username, name, email, blocked, dob, gender } = u;
-    // if (contact?.id) {
-    //   let city_object;
-    //   ({ phone, address, city: city_object } = contact);
-    //   ({ name: city, province, id: city_id } = city_object);
-    // }
-    // if (img) {
-    //   image = img.url;
-    //   imageID = img.id;
-    // }
+    const { image: file_obj, insurance: i_obj, certificate: c_obj, } = u.info;
+    let image;
+    if (file_obj) {
+      image = otherService.extractFileDirect(file_obj);
+    }
+
+    let insurance;
+    if (i_obj) {
+      insurance = otherService.extractFileDirect(i_obj);
+    }
+
+    let certificate;
+    if (c_obj) {
+      certificate = otherService.extractFileDirect(c_obj);
+    }
+
+    console.log("Got", file_obj, i_obj, c_obj);
 
     return {
-      ...u
+      ...u,
+      ...u.info,
+      image, insurance, certificate
     };
   }
-  register = (name, email, password) => this.post('users/register', { password, email, name });
 
   logout = () => {
     localStorage.removeItem('token');
@@ -114,60 +119,13 @@ class UserService extends GenericService {
       }
     });
 
-  getUser = (ID) =>
-    new Promise((resolve, reject) => {
 
-      this.get(`users/${ID}?${this.query}`, {})
-        .then((user) => {
-          resolve(this.extractDataDirect(user));
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
-
-  findUser = (ID) =>
-    new Promise((resolve, reject) => {
-      const query = qs.stringify(
-        {
-          populate: this.populate,
-          filters: {
-            username: {
-              $eq: ID,
-            }
-          }
-        });
-      this.get(`users?${query}`, {})
-        .then((user) => {
-          if (user.length > 0) {
-            return resolve(this.extractDataDirect(user[0]));
-          }
-
-          reject(new Error('User not found'));
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
-
-  addUser = (username, name, email, password, dob, gender, contact, image) =>
-    this.post(`auth/local/register`, {
-      username,
-      name,
-      email,
-      password,
-      dob,
-      gender,
-      contact,
-      image
-    });
-
-  updateUser = (id, name, email, password, dob, gender, contact, image) => {
-    let body = { name, dob, gender, contact, image, email };
-    if (password && password.length > 3) {
-      body = { ...body, password };
+  updateUser = (body, id) => {
+    if (!(body.password && body.password.length > 3)) {
+      delete body.password;
+      delete body.confirm;
     }
-    return this.put(`users/${id}`, body);
+    return this.put(`chefs/${id}`, { data: body });
   };
 
   updateUserimage = (id, image) => {
@@ -175,25 +133,6 @@ class UserService extends GenericService {
     return this.put(`users/${id}`, body);
   };
 
-  userDoesNotExist = (ID) => new Promise((resolve, reject) => {
-    const query = qs.stringify(
-      {
-        filters: {
-          username: {
-            $eq: ID,
-          }
-        }
-      });
-    this.get(`users?${query}`, {})
-      .then((response) => {
-        if (response.length > 0)
-          return reject(new Error("Already taken"));
-        resolve();
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
 
   extractData(attributes) {
     const { user: user_object } = attributes;
@@ -251,53 +190,61 @@ class UserService extends GenericService {
   login = (ID, Password) =>
     new Promise((resolve, reject) => {
       this.loginUser(ID, Password)
-        .then(() => {
-          const query = qs.stringify(
-            {
-              populate: '*'
-            }
-          );
-          this.get(`users/me?${query}`)
-            .then((response) => {
-              console.log("Response", response);
-              if (response.role.name.toLowerCase() == "chef") {
-                let user = { ...this.extractDataDirect(response), isAdmin: true };
-                const encoded = railfencecipher.encodeRailFenceCipher(railfencecipher.encodeRailFenceCipher(JSON.stringify(user), RailFenceSize + 1), RailFenceSize);
-                localStorage.setItem('user', encoded);
-                resolve(user);
-              }
-              else {
-                localStorage.removeItem('token');
-                reject({ message: "User is not a Chef" });
-              }
-
-            })
-            .catch((err) => {
-              localStorage.removeItem('token');
-              reject(err);
-            });
-        })
+        .then(() => resolve(this.getMe()))
         .catch((err) => {
           reject(err);
         });
     });
 
-  reAsignUser = (u) => {
-    let user = { ...u, isAdmin: true };
-    const encoded = railfencecipher.encodeRailFenceCipher(railfencecipher.encodeRailFenceCipher(JSON.stringify(user), RailFenceSize + 1), RailFenceSize);
-    localStorage.setItem('user', encoded);
-  };
 
-  settingsUpdate = ((name, email, password, dob, gender, contact, image, u_id) =>
-    this.updateUser(u_id, name, email, password, dob, gender, contact, image));
+  getMe = () => new Promise((resolve, reject) => {
+    this.get(`users/me`)
+      .then((response) => {
+        console.log("Response", response);
+        if (response.role.name.toLowerCase() == "chef") {
+          let user = this.extractDataDirect(response)
+          const encoded = railfencecipher.encodeRailFenceCipher(railfencecipher.encodeRailFenceCipher(JSON.stringify(user), RailFenceSize + 1), RailFenceSize);
+          localStorage.setItem('user', encoded);
+          resolve(user);
+        }
+        else {
+          localStorage.removeItem('token');
+          reject({ message: "User is not a Chef" });
+        }
 
-  lock = (ID) => this.put(`users/${ID}`, {
-    blocked: true
+      })
+      .catch((err) => {
+        localStorage.removeItem('token');
+        reject(err);
+      });
   });
 
-  unlock = (ID) => this.put(`users/${ID}`, {
-    blocked: false
-  });
+  checkOnBoarding = () => new Promise(
+    (resolve, reject) => {
+      this.get(`wallets/connectedAccount`)
+        .then((response) => {
+          if (response.data?.attributes?.accountLink) {
+            resolve({ onboarding: false, url: response.data.attributes.accountLink });
+          }
+          else {
+            this.get(`wallets/loginToStripe`).then((response) => {
+              resolve({ onboarding: true, url: response.url });
+            }).catch((err) => reject(err));
+          }
+        })
+        .catch((err) => reject(err));
+    }
+  );
+
+  completeOnBoarding = () => new Promise(
+    (resolve, reject) => {
+      this.get(`wallets/boardingSuccess`)
+        .then(() => {
+          resolve()
+        })
+        .catch((err) => reject(err));
+    }
+  );
 }
 
 export default UserService;

@@ -13,7 +13,7 @@ import Dialog from 'src/components/misc/alerts/Dialog';
 import LoadingFormButton from 'src/components/misc/Buttons/LoadingFormButton';
 import { ResetSchema } from 'src/config/form-schemas';
 import { HidePasswordIcon, PasswordIcon, ShowPasswordIcon } from 'src/config/icons';
-import { RouteLandingPage } from 'src/config/routes';
+import { RouteLogin } from 'src/config/routes';
 import userService from '../../../services/UserService';
 
 /*
@@ -67,7 +67,7 @@ export default () => {
 	const handleClose = () => {
 		resetForm();
 		setOpenDia(false);
-		navigate(RouteLandingPage);
+		navigate(RouteLogin);
 	};
 
 	const handleShowPassword = () => {
