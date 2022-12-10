@@ -2,6 +2,7 @@ import railfencecipher from 'railfencecipher';
 import qs from 'qs';
 import GenericService from './GenericService';
 import { RailFenceSize } from 'src/config/settings';
+import otherService from './OtherService';
 
 class UserService extends GenericService {
   constructor() {
@@ -60,23 +61,28 @@ class UserService extends GenericService {
     });
 
   extractDataDirect(u) {
-    // const { contact, image: img, } = u;
-    // let phone, address, city, province, city_id;
-    // let image = undefined;
-    // let imageID;
-    // const { id: u_id, username, name, email, blocked, dob, gender } = u;
-    // if (contact?.id) {
-    //   let city_object;
-    //   ({ phone, address, city: city_object } = contact);
-    //   ({ name: city, province, id: city_id } = city_object);
-    // }
-    // if (img) {
-    //   image = img.url;
-    //   imageID = img.id;
-    // }
+    const { image: file_obj, insurance: i_obj, certificate: c_obj, } = u.info;
+    let image;
+    if (file_obj) {
+      image = otherService.extractFileDirect(file_obj);
+    }
+
+    let insurance;
+    if (i_obj) {
+      insurance = otherService.extractFileDirect(i_obj);
+    }
+
+    let certificate;
+    if (c_obj) {
+      certificate = otherService.extractFileDirect(c_obj);
+    }
+
+    console.log("Got", file_obj, i_obj, c_obj);
 
     return {
-      ...u
+      ...u,
+      ...u.info,
+      image, insurance, certificate
     };
   }
   register = (name, email, password) => this.post('users/register', { password, email, name });
@@ -252,12 +258,8 @@ class UserService extends GenericService {
     new Promise((resolve, reject) => {
       this.loginUser(ID, Password)
         .then(() => {
-          const query = qs.stringify(
-            {
-              populate: '*'
-            }
-          );
-          this.get(`users/me?${query}`)
+
+          this.get(`users/me`)
             .then((response) => {
               console.log("Response", response);
               if (response.role.name.toLowerCase() == "chef") {

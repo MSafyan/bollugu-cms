@@ -17,6 +17,7 @@ import ProfileOptions from './profile/ProfileOptions';
 import StudentResult from './profile/StudentResult';
 import TeacherProfile from './profile/TeacherProfile';
 import UserProfile from './profile/UserProfile';
+import ChefOptions from './profile/ChefOptions';
 
 /*
   Main Working
@@ -112,6 +113,9 @@ export default () => {
   */
   useEffect(getData, []);
 
+
+  console.log("Profile", user);
+
   /*
     Main Design
   */
@@ -122,54 +126,8 @@ export default () => {
       ) : (
         <Container maxWidth="xl">
           <UserProfile user={user} />
-          {isCoordinator && <CoordinatorProfile user={user} />}
 
-          {isStudent && <StudentResult classes={user.classes} />}
-
-          {isTeacher && <TeacherProfile classes={user.classes} user={user} />}
-
-          {isCoordinator && loggedInUser.isAdmin &&
-            (
-              <ProfileOptions
-                user={user}
-                handleEdit={handleEdit}
-                handleLock={handleLock}
-              />
-            )
-          }
-
-          {isTeacher && loggedInUser.isCoordinator &&
-            (
-              <ProfileOptions
-                user={user}
-              />
-            )
-          }
-
-          {isStudent && loggedInUser.isCoordinator &&
-            (
-              <ProfileOptions
-                user={user}
-                handleDelete={handleDelete}
-                handleEdit={handleEditStudent}
-                handleLock={handleLock}
-              />
-            )
-          }
-          {
-            isStudent &&
-            <Dialog
-              error={user.classes.length <= 0}
-              warning={user.classes.length > 0}
-              buttonText={"Close"}
-              buttonText2={user.classes.length > 0 ? '' : 'Remove'}
-              openDialog={showDelete}
-              handleButton={handleClose}
-              handleButton2={handleDeleteFinal}
-            >
-              {user.classes.length > 0 ? `You can not delete a student who has been assgined to classes, please remove the student from classes first` : `Are you sure you want to remove?`}
-            </Dialog>
-          }
+          <ChefOptions user={user} handleEdit={handleEdit} />
         </Container>
       )}
     </Page>

@@ -127,7 +127,12 @@ class GenericService {
     axios({
       url,
       method: 'GET',
-      responseType: 'blob'
+      responseType: 'blob',
+      transformRequest: [function (data_, headers) {
+        delete headers.Authorization;
+        delete headers.common.Authorization;
+        return data_;
+      }]
     })
       .then((response) => {
         const url_ = window.URL
@@ -139,6 +144,15 @@ class GenericService {
         link.click();
         document.body.removeChild(link);
       });
+  }
+
+  download2(url, name) {
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', name);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }
 export default GenericService;

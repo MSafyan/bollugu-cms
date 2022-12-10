@@ -33,7 +33,18 @@ class OtherServiceClass extends GenericService {
     const { id, attributes } = data;
     const { name, ext, url, createdAt } = attributes;
 
-    console.log("Image ", attributes);
+    return {
+      id,
+      name,
+      ext,
+      url,
+      uploadedOn: createdAt
+    };
+  }
+
+  extractFileDirect(data) {
+    const { id, name, ext, url, createdAt } = data;
+
     return {
       id,
       name,

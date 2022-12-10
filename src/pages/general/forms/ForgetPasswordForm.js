@@ -6,6 +6,7 @@ import {
 	InputAdornment, Stack,
 	TextField
 } from '@material-ui/core';
+import { Alert, Collapse } from '@mui/material';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useState } from 'react';
 import Dialog from 'src/components/misc/alerts/Dialog';
@@ -107,7 +108,7 @@ export default () => {
 
 				{serverError &&
 					<Stack sx={{ width: '50%' }} marginTop={3}>
-						<Collapse in={openServerError}>
+						<Collapse in={!!serverError}>
 							<Alert severity="error">
 								{serverError}
 							</Alert>
