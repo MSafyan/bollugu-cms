@@ -1405,6 +1405,13 @@
   dependencies:
     "@iconify/types" "*"
 
+"@iconify/icons-clarity@^1.2.6":
+  "integrity" "sha512-sWASL+Xvsf4ghdCnwmzHIZ/I6m10FKBEyMMmQcSmlFTfOftTUQWEzl6UKk6PtsKSxG4n7aD+uPGV0x4uaZXEDg=="
+  "resolved" "https://registry.npmjs.org/@iconify/icons-clarity/-/icons-clarity-1.2.6.tgz"
+  "version" "1.2.6"
+  dependencies:
+    "@iconify/types" "*"
+
 "@iconify/icons-entypo@^1.2.1":
   "integrity" "sha512-QHZFlRikRgA9SLNfPLQbrWG7A8602o90FBC45rB2lTG+7b/gTygcAFyOKawfqyEBM64cXt3Sn6wmm+E2RqY1eA=="
   "resolved" "https://registry.npmjs.org/@iconify/icons-entypo/-/icons-entypo-1.2.4.tgz"
