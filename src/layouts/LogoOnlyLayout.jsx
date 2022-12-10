@@ -32,7 +32,7 @@ export default function LogoOnlyLayout({ loginPage }) {
 
   const handleOnAuth = (pass) => {
     if (!pass) return setShowPage(true);
-    return navigate(RouteMenu);
+    if (loginPage) return navigate(RouteMenu);
   };
 
   return (
