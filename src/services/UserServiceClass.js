@@ -202,7 +202,7 @@ class UserService extends GenericService {
       .then((response) => {
         console.log("Response", response);
         if (response.role.name.toLowerCase() == "chef") {
-          let user = { ...this.extractDataDirect(response), isAdmin: true };
+          let user = this.extractDataDirect(response)
           const encoded = railfencecipher.encodeRailFenceCipher(railfencecipher.encodeRailFenceCipher(JSON.stringify(user), RailFenceSize + 1), RailFenceSize);
           localStorage.setItem('user', encoded);
           resolve(user);

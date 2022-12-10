@@ -8,11 +8,11 @@ export const BackendURLAPI = 'https://api.chezchefs.com/api/';
 
 
 export const LoginImage = "/static/illustrations/Chef.gif";
-export const ForgetPageImage = "/static/illustrations/forgot.png";
+export const ForgetPageImage = "/static/illustrations/forgot.gif";
 export const ResetPageImage = ForgetPageImage;
-export const Image404 = "/static/illustrations/404.png";
-export const Image401 = "/static/illustrations/401.webp";
-export const DefaultAvatar = '/static/mock-images/avatars/islamicavatar.png';
+export const Image404 = "/static/illustrations/404.gif";
+export const Image401 = Image404
+export const DefaultAvatar = '/static/illustrations/avatar.webp';
 export const DefaultUploadedFileImage = '/static/icons/file.png';
 
 export const DefaultFood = '/static/illustrations/missingfood.jpg';

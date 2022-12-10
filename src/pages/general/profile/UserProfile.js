@@ -63,7 +63,7 @@ export default ({ user }) => {
           <Typography fontWeight="bold">Cuisine: </Typography>
         </Grid>
         <Grid item xs={12} sm={4} md={4}>
-          <Typography>{cuisineName}</Typography>
+          <Typography>{cuisineName.split(",").join(", ")}</Typography>
         </Grid>
         <Grid item xs={12} sm={2} md={2}>
           <Typography fontWeight="bold">Bio: </Typography>

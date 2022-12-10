@@ -4,7 +4,7 @@
 import { Icon } from '@iconify/react';
 import { Box, Button, CircularProgress, Grid, IconButton, InputAdornment, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
-import { Alert, Collapse } from '@mui/material';
+import { Alert, Chip, Collapse } from '@mui/material';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -57,7 +57,7 @@ export default ({ user }) => {
     initialValues: {
       firstName: user.firstName ?? '',
       city: user.city ?? '',
-      cuisineName: user.cuisineName ?? '',
+      cuisineName: user.cuisineName?.split(",") ?? [],
       phoneNumber: user.phoneNumber ?? '',
       long: user.long ?? '',
       password: '',
@@ -82,6 +82,7 @@ export default ({ user }) => {
       image: imageID,
       insurance: insuranceID,
       certificate: certificateID,
+      cuisineName: values.cuisineName.join(",")
     };
 
     userService.updateUser(data, user.id)
@@ -250,8 +251,17 @@ export default ({ user }) => {
               <ThemeProvider theme={FormTheme}>
                 <InputLabel>Cuisine</InputLabel>
               </ThemeProvider>
-              <Select fullWidth
+              <Select
+                fullWidth
                 {...getFieldProps('cuisineName')}
+                multiple
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
                 error={Boolean(touched.cuisineName && errors.cuisineName)}
               >
                 {

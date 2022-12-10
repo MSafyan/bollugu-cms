@@ -28,8 +28,7 @@ const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
 }));
 
 DashboardNavbar.propTypes = {
-  onOpenSidebar: PropTypes.func,
-  isAdmin: PropTypes.bool
+  onOpenSidebar: PropTypes.func
 };
 
 export default function DashboardNavbar({ onOpenSidebar }) {

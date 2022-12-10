@@ -8,8 +8,6 @@ import { matchPath, NavLink as RouterLink, useLocation } from 'react-router-dom'
 import { Box, Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@material-ui/core';
 import { alpha, styled, useTheme } from '@material-ui/core/styles';
 
-import Cookies from 'js-cookie';
-
 // ----------------------------------------------------------------------
 
 const ListItemStyle = styled((props) => <ListItemButton disableGutters {...props} />)(
@@ -161,23 +159,11 @@ export default function NavSection({ navConfig, ...other }) {
   const { pathname } = useLocation();
   const match = (path) => (path ? !!matchPath({ path, end: false }, pathname) : false);
 
-  const updateCookie = (title) => {
-    let count = Cookies.get(title) || 0;
-    Cookies.set(title, parseInt(count) + 1);
-  };
-
   return (
     <Box {...other}>
       <List disablePadding>
         {navConfig.map((item) => (
-          <NavItem
-            onClick={() => {
-              updateCookie(item.title);
-            }}
-            key={item.title}
-            item={item}
-            active={match}
-          />
+          <NavItem key={item.title} item={item} active={match} />
         ))}
       </List>
     </Box>

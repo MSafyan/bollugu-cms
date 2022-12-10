@@ -1,28 +1,11 @@
 import { Icon } from '@iconify/react';
 import {
-  CoordinatorsIcon,
-  CoursesIcon,
-  DashboardIcon,
-  FeeIcon,
-  LockIcon,
-  MadarisIcon,
-  MenuIcon,
-  OrdersIcon,
-  PastClassesIcon,
-  ProfileIcon,
-  StudentsIcon,
-  TeachersIcon
+  LockIcon, MenuIcon,
+  OrdersIcon, ProfileIcon
 } from 'src/config/icons';
 
-import Cookies from 'js-cookie';
 import {
-  RouteMenu, RouteFee,
-  RouteProfile,
-  RouteCoordinatorFee, RouteCoordinators,
-  RouteCourses,
-  RouteOrders, RoutePastClasses, RouteSearchStudent,
-  RouteSearchTeacher, RouteStudentDashboard,
-  RouteStudentResult, RouteTeacherDashboard
+  RouteMenu, RouteOrders, RouteProfile
 } from 'src/config/routes';
 
 const getIcon = (name) => <Icon icon={name} width={22} height={22} />;

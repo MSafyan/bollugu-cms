@@ -59,8 +59,8 @@ export const SettingsSchema = Yup.object().shape({
 		Yup.string()
 			.required('Contact is required'),
 	cuisineName:
-		Yup.string()
-			.required('Cuisine is required'),
+		Yup.array()
+			.min(1, 'Please select at least one cuisine'),
 	password:
 		Yup.string()
 			.min(6, 'Password must be atleast 6 characters')
