@@ -2,7 +2,7 @@ import railfencecipher from 'railfencecipher';
 import qs from 'qs';
 import GenericService from './GenericService';
 import { RailFenceSize } from 'src/config/settings';
-import otherService from './OtherService';
+import otherService from './OtherServiceClass';
 
 class UserService extends GenericService {
   constructor() {
@@ -85,7 +85,6 @@ class UserService extends GenericService {
       image, insurance, certificate
     };
   }
-  register = (name, email, password) => this.post('users/register', { password, email, name });
 
   logout = () => {
     localStorage.removeItem('token');
@@ -120,53 +119,6 @@ class UserService extends GenericService {
       }
     });
 
-  getUser = (ID) =>
-    new Promise((resolve, reject) => {
-
-      this.get(`users/${ID}?${this.query}`, {})
-        .then((user) => {
-          resolve(this.extractDataDirect(user));
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
-
-  findUser = (ID) =>
-    new Promise((resolve, reject) => {
-      const query = qs.stringify(
-        {
-          populate: this.populate,
-          filters: {
-            username: {
-              $eq: ID,
-            }
-          }
-        });
-      this.get(`users?${query}`, {})
-        .then((user) => {
-          if (user.length > 0) {
-            return resolve(this.extractDataDirect(user[0]));
-          }
-
-          reject(new Error('User not found'));
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
-
-  addUser = (username, name, email, password, dob, gender, contact, image) =>
-    this.post(`auth/local/register`, {
-      username,
-      name,
-      email,
-      password,
-      dob,
-      gender,
-      contact,
-      image
-    });
 
   updateUser = (body, id) => {
     if (!(body.password && body.password.length > 3)) {
@@ -181,25 +133,6 @@ class UserService extends GenericService {
     return this.put(`users/${id}`, body);
   };
 
-  userDoesNotExist = (ID) => new Promise((resolve, reject) => {
-    const query = qs.stringify(
-      {
-        filters: {
-          username: {
-            $eq: ID,
-          }
-        }
-      });
-    this.get(`users?${query}`, {})
-      .then((response) => {
-        if (response.length > 0)
-          return reject(new Error("Already taken"));
-        resolve();
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
 
   extractData(attributes) {
     const { user: user_object } = attributes;
@@ -263,11 +196,6 @@ class UserService extends GenericService {
         });
     });
 
-  reAsignUser = (u) => {
-    let user = { ...u, isAdmin: true };
-    const encoded = railfencecipher.encodeRailFenceCipher(railfencecipher.encodeRailFenceCipher(JSON.stringify(user), RailFenceSize + 1), RailFenceSize);
-    localStorage.setItem('user', encoded);
-  };
 
   getMe = () => new Promise((resolve, reject) => {
     this.get(`users/me`)
@@ -290,9 +218,6 @@ class UserService extends GenericService {
         reject(err);
       });
   });
-
-  settingsUpdate = ((name, email, password, dob, gender, contact, image, u_id) =>
-    this.updateUser(u_id, name, email, password, dob, gender, contact, image));
 
   checkOnBoarding = () => new Promise(
     (resolve, reject) => {

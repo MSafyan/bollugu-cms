@@ -106,47 +106,9 @@ class GenericService {
     });
   }
 
-  deleteFile(file) {
-    return axios.delete(`upload/files/${file}`);
-  }
 
-
-
-  getTotalCount(response) {
-    const { meta } = response;
-    let count = 0;
-    if (meta) {
-      const { pagination } = meta;
-      if (pagination)
-        count = pagination.total;
-    }
-    return count;
-  }
 
   download(url, name) {
-    axios({
-      url,
-      method: 'GET',
-      responseType: 'blob',
-      transformRequest: [function (data_, headers) {
-        delete headers.Authorization;
-        delete headers.common.Authorization;
-        return data_;
-      }]
-    })
-      .then((response) => {
-        const url_ = window.URL
-          .createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url_;
-        link.setAttribute('download', name);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      });
-  }
-
-  download2(url, name) {
     const link = document.createElement('a');
     link.href = url;
     link.setAttribute('download', name);

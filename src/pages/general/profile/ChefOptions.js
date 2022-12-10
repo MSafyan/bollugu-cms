@@ -24,7 +24,7 @@ export default ({ user, handleEdit }) => {
 						size="large"
 						disabled={!user.certificate}
 						onClick={() => {
-							userService.download2(user.certificate?.url, `${user.firstName} - Certificate`)
+							userService.download(user.certificate?.url, `${user.firstName} - Certificate`)
 						}}
 					>
 						Download Certificate
@@ -39,7 +39,7 @@ export default ({ user, handleEdit }) => {
 						size="large"
 						disabled={!user.insurance}
 						onClick={() => {
-							userService.download2(user.insurance?.url, `${user.firstName} - Insurance`)
+							userService.download(user.insurance?.url, `${user.firstName} - Insurance`)
 						}}
 					>
 						Download Insurance

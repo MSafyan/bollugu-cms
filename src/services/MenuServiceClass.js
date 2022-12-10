@@ -1,6 +1,6 @@
 import qs from 'qs';
 import GenericService from './GenericService';
-import otherService from './OtherService';
+import otherService from './OtherServiceClass';
 
 class MenuService extends GenericService {
 
