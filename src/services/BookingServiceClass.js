@@ -1,20 +1,24 @@
 import qs from 'qs';
+import { ORDER_STATUS } from 'src/config/settings';
 import GenericService from './GenericService';
 import menuService from './MenuServiceClass';
-import otherService from './OtherService';
 
 class BookingService extends GenericService {
-
-  constructor() {
-    super();
-    this.populate = [];
-  }
-
 
   extractData(data) {
     const { id, attributes } = data;
 
-    const { amount, createdAt, status, order_items: oi_object } = attributes;
+    const { amount, createdAt, status, order_items: oi_object, customer: c_object } = attributes;
+
+    let customer;
+    let customerID;
+    if (c_object) {
+      const { data: c_data } = c_object;
+      if (c_data) {
+        customer = c_data.attributes?.user?.data?.attributes?.email;
+        customerID = c_data.id;
+      }
+    }
 
     let order_items;
     if (oi_object) {
@@ -46,7 +50,9 @@ class BookingService extends GenericService {
       amount,
       createdAt,
       status,
-      order_items
+      order_items,
+      customer,
+      customerID
     };
   }
 
@@ -92,16 +98,15 @@ class BookingService extends GenericService {
             ]
           },
           sort: `${pagination.sort_by}:${pagination.order}`,
-          populate: ['order_items.menu_item'],
+          populate: ['order_items.menu_item', 'customer.user'],
           pagination: {
             page: pagination.page + 1,
             pageSize: pagination.perPage
           }
         }, { encodeValuesOnly: true });
       this.get(`bookings?${query}`)
-
         .then((response) => {
-          console.log("Bookings", this.getBookings(response));
+          console.log("Bookings --- ", response);
           resolve(this.getBookings(response))
         })
         .catch((err) => reject(err));
@@ -154,7 +159,7 @@ class BookingService extends GenericService {
             ]
           },
           sort: `${pagination.sort_by}:${pagination.order}`,
-          populate: ['order_items.menu_item'],
+          populate: ['order_items.menu_item', 'customer.user'],
           pagination: {
             page: pagination.page + 1,
             pageSize: pagination.perPage
@@ -188,15 +193,34 @@ class BookingService extends GenericService {
   );
 
 
-  add = ((data) =>
-    Promise.resolve(this.post(`menu-items`, {
-      data
-    })));
+  update = ((id, status, sendTo, chef, customer) =>
+    new Promise((resolve, reject) => {
+      this.put(`bookings/${id}`, {
+        data: { status }
+      }).then((response) => {
+        console.log("Update", response);
 
-  update = ((id, status) =>
-    Promise.resolve(this.put(`bookings/${id}`, {
-      data: { status }
-    })));
+        const email = {
+          body: "Your order status has been changed to " + ORDER_STATUS[response.data.attributes.status],
+          subject: `Order #${id} Status Changed`,
+          sendTo,
+          isEmail: true,
+          chef,
+          customer,
+          sender: "chef"
+        };
+
+        this.post(`notifications`, email)
+          .then((response) => {
+            console.log("Notification", response);
+            resolve(response);
+          })
+          .catch((err) => {
+            console.log("Notification - err", err.response);
+            reject(err);
+          });
+      })
+    }));
 
 
   getBookings(response) {
@@ -205,8 +229,6 @@ class BookingService extends GenericService {
     return { items: data.map((noti) => this.extractData(noti)), meta: response.meta };
   }
 
-
-  remove = (ID) => this.delete(`Menu/${ID}`);
 }
 
 const bookingService = new BookingService()

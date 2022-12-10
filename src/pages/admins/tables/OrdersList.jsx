@@ -11,58 +11,27 @@ import {
   TableRow,
   Typography
 } from '@material-ui/core';
-import { filter, get } from 'lodash';
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 
-import CenterLoading from 'src/components/misc/CenterLoading';
-import {
-  EditIcon,
-  LockIcon,
-  OrderListIcon,
-  OrdersIcon,
-  UnlockIcon,
-  ViewIcon
-} from 'src/config/icons';
-import {
-  defaultPerPage,
-  ORDER_STATUS,
-  ORDER_STATUS_ORDER,
-  rowsPerPageList
-} from 'src/config/settings';
-import { getComparator, stabilize } from 'src/utils/table';
-import palette from 'src/theme/palette';
-import Scrollbar from '../../../components/Scrollbar';
-import SearchNotFound from '../../../components/misc/alerts/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../components/misc/table';
-import madrisaService from '../../../services/MadrisaService';
-import { getDateTime } from 'src/utils/dateTime';
 import Dialog from 'src/components/misc/alerts/Dialog';
+import { OrderListIcon } from 'src/config/icons';
+import { ORDER_STATUS, ORDER_STATUS_ORDER, rowsPerPageList } from 'src/config/settings';
 import bookingService from 'src/services/BookingServiceClass';
+import userService from 'src/services/UserService';
+import palette from 'src/theme/palette';
+import { getDateTime } from 'src/utils/dateTime';
+import SearchNotFound from '../../../components/misc/alerts/SearchNotFound';
+import { UserListHead, UserListToolbar } from '../../../components/misc/table';
+import Scrollbar from '../../../components/Scrollbar';
 
 /*
   Global Variables, Functions
 */
 
-function applySortFilter(array, comparator, query) {
-  let toSort = array;
-  if (query) {
-    const queryL = query.toLowerCase();
-    toSort = filter(
-      array,
-      (element) =>
-        element.id.toString().toLowerCase().indexOf(queryL) !== -1 ||
-        element.status.toLowerCase().indexOf(queryL) !== -1 ||
-        getDateTime(element.createdAt).toLowerCase().indexOf(queryL) !== -1
-    );
-  }
-  return stabilize(toSort, comparator);
-}
-
 /*
   Main Working
 */
-export default ({ data, pagination, setPagination, setLoading, getData }) => {
+export default ({ data, pagination, setPagination, setLoading, getData, getData2 }) => {
   /*
     States, Params, Navigation, Query, Variables.
   */
@@ -74,7 +43,6 @@ export default ({ data, pagination, setPagination, setLoading, getData }) => {
 
   const [search, setSearch] = useState(pagination.search);
   const [selected, setSelected] = useState([]);
-  const emptyRows = pagination.page > 0 ? data.items.length : 0;
   const isUserNotFound = data.items.length === 0;
 
   const [openDia, setOpenDia] = useState(false);
@@ -105,9 +73,6 @@ export default ({ data, pagination, setPagination, setLoading, getData }) => {
       setPagination({ ...pagination, search, page: 0 });
     }
   };
-  const handleMoreMenuCell = (event) => {
-    event.preventDefault();
-  };
 
   const handleView = (ID) => {
     setOpenDia(data.items.find((item) => item.id === ID));
@@ -126,11 +91,21 @@ export default ({ data, pagination, setPagination, setLoading, getData }) => {
     setSelected([]);
   };
 
-  const updateStatus = () => {
+  const updateStatus = async () => {
     setLoading(true);
+    const user = await userService.getLoggedInUser();
     bookingService
-      .update(openDia?.id, ORDER_STATUS_ORDER[ORDER_STATUS_ORDER.indexOf(openDia?.status) + 1])
-      .then(getData)
+      .update(
+        openDia?.id,
+        ORDER_STATUS_ORDER[ORDER_STATUS_ORDER.indexOf(openDia?.status) + 1],
+        openDia?.customer,
+        user.id,
+        openDia?.customerID
+      )
+      .then(() => {
+        getData();
+        if (ORDER_STATUS_ORDER.indexOf(openDia?.status) === 2) getData2();
+      })
       .catch((err) => console.log(err));
   };
 

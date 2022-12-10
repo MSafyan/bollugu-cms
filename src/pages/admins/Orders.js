@@ -2,18 +2,14 @@
 	Imports
 */
 import { Container } from '@material-ui/core';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
-import FloatingAdd from 'src/components/misc/Buttons/FloatingAdd';
 import CenterLoading from 'src/components/misc/CenterLoading';
 import ListPageTitle from 'src/components/misc/ListPageTitle';
 import { defaultPerPage } from 'src/config/settings';
 import bookingService from 'src/services/BookingServiceClass';
 import userService from 'src/services/UserService';
 import Page from '../../components/Page';
-import MadarisList from './tables/MadarisList';
 import OrdersList from './tables/OrdersList';
 
 /*
@@ -101,6 +97,7 @@ export default () => {
 						setPagination={setPagination}
 						setLoading={setLoading}
 						getData={getData}
+						getData2={getData2}
 					/>
 				)}
 				<br />
