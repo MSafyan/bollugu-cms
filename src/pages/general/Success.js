@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Page from 'src/components/Page';
-import { RouteAdminProfile } from 'src/config/routes';
+import { RouteProfile } from 'src/config/routes';
 import userService from 'src/services/UserService';
 import { ContentStyle } from 'src/theme/logo-only-pages';
 
@@ -24,7 +24,7 @@ export default () => {
 	*/
 	const completeOnBoarding = () => {
 		userService.completeOnBoarding().then(() => {
-			navigator(RouteAdminProfile, { replace: true });
+			navigator(RouteProfile, { replace: true });
 		});
 	};
 

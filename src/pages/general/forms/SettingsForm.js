@@ -14,7 +14,7 @@ import LoadingFormButton from 'src/components/misc/Buttons/LoadingFormButton';
 import { Cities, cuisines } from 'src/config/data';
 import { SettingsSchema } from 'src/config/form-schemas';
 import { HidePasswordIcon, PasswordIcon, ShowPasswordIcon } from 'src/config/icons';
-import { RouteAdminProfile } from 'src/config/routes';
+import { RouteProfile } from 'src/config/routes';
 import { acceptFileUpload, acceptImageUpload, DefaultAvatar, DefaultUploadedFileImage } from 'src/config/settings';
 import userService from 'src/services/UserService';
 import { ContentStyle, FormTheme } from '../../../theme/form-pages';
@@ -171,7 +171,7 @@ export default ({ user }) => {
 
   const handleClose = () => {
     setOpenDia(false);
-    navigate(RouteAdminProfile);
+    navigate(RouteProfile);
   };
 
   const handleShowPassword = () => {

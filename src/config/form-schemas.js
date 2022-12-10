@@ -1,5 +1,4 @@
 import * as Yup from 'yup';
-import { cnicRegExp, courseCodeRegExp, feeAmountRegExp, madrisaCodeRegExp, nameRegExp, phoneRegExp, studentCodeRegExp } from './regex';
 
 export const ResetSchema = (password) => (
 	Yup.object().shape({

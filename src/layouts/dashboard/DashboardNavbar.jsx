@@ -32,7 +32,7 @@ DashboardNavbar.propTypes = {
   isAdmin: PropTypes.bool
 };
 
-export default function DashboardNavbar({ isAdmin, onOpenSidebar }) {
+export default function DashboardNavbar({ onOpenSidebar }) {
   return (
     <RootStyle>
       <ToolbarStyle>

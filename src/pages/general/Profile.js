@@ -8,7 +8,7 @@ import { useNavigate, NavLink as RouterLink } from 'react-router-dom';
 import LoadingFormButton from 'src/components/misc/Buttons/LoadingFormButton';
 
 import CenterLoading from 'src/components/misc/CenterLoading';
-import { RouteAdminSetting } from 'src/config/routes';
+import { RouteSetting } from 'src/config/routes';
 import userService from 'src/services/UserService';
 
 import Page from '../../components/Page';
@@ -57,7 +57,7 @@ export default () => {
 
 
   const handleEdit = () => {
-    navigate(RouteAdminSetting);
+    navigate(RouteSetting);
   };
 
   /*

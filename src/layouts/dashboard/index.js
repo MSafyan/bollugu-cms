@@ -3,10 +3,10 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 // material
 import { styled } from '@material-ui/core/styles';
 //
+import Auth from 'src/components/authentication/login/Auth';
+import { RouteLogin } from 'src/config/routes';
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
-import Auth from 'src/components/authentication/login/Auth';
-import { RouteAdminLogin, RouteCoordinatorLogin, RouteStudentLogin, RouteTeacherLogin } from 'src/config/routes';
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ const MainStyle = styled('div')(({ theme }) => ({
 export const DashboardContext = createContext();
 
 
-export default function DashboardLayout({ adminLogin, coordinatorLogin, teacherLogin, studentLogin }) {
+export default function DashboardLayout({ }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -54,23 +54,17 @@ export default function DashboardLayout({ adminLogin, coordinatorLogin, teacherL
     if (pass)
       return setLoggedIn(true);
 
-    if (adminLogin)
-      return navigate(RouteAdminLogin, { state: { from: location }, replace: true });
-    if (coordinatorLogin)
-      return navigate(RouteCoordinatorLogin, { state: { from: location }, replace: true });
-    if (teacherLogin)
-      return navigate(RouteTeacherLogin);
-    if (studentLogin)
-      return navigate(RouteStudentLogin);
+
+    return navigate(RouteLogin, { state: { from: location }, replace: true });
   };
 
   return (
     <DashboardContext.Provider value={{ reload: reloadApp }}>
-      <Auth admin={adminLogin} coordinator={coordinatorLogin} teacher={teacherLogin} student={studentLogin} onAuth={handleOnAuth}>
+      <Auth onAuth={handleOnAuth}>
 
         {loggedIn &&
           <RootStyle>
-            {!reload && <DashboardNavbar isAdmin={adminLogin} onOpenSidebar={() => setOpen(true)} />}
+            {!reload && <DashboardNavbar onOpenSidebar={() => setOpen(true)} />}
             <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
             <MainStyle>
               <Outlet />

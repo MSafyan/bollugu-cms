@@ -32,12 +32,12 @@ export default function Router() {
   return useRoutes([
     {
       path: RouteLandingPage,
-      element: <LogoOnlyLayout adminLogin loginPage />,
+      element: <LogoOnlyLayout loginPage />,
       children: [{ path: 'login', element: <Login admin /> }]
     },
     {
       path: RouteLandingPage,
-      element: <DashboardLayout adminLogin />,
+      element: <DashboardLayout />,
       children: [
         { path: '', element: <MenuItems /> },
         {
