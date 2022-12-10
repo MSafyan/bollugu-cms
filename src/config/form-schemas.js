@@ -72,6 +72,24 @@ export const AddCoordinatorSchema = Yup.object().shape({
 			}),
 });
 
+
+export const AddMenuItemSchema = Yup.object().shape({
+	name:
+		Yup.string()
+			.required('Name is required'),
+	description:
+		Yup.string()
+			.required('Description is required'),
+	price:
+		Yup.number()
+			.required('Price is required')
+			.min(0, 'Price can not be less than 0'),
+	availbility:
+		Yup.array()
+			.min(1, 'Please select at least one day'),
+});
+
+
 export const AddMadrisaSchema = Yup.object().shape({
 	name:
 		Yup.string()

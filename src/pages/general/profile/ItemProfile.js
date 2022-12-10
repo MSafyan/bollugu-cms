@@ -22,7 +22,7 @@ export default ({ item }) => {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <ItemImage Image={image.url ?? DefaultFood} />
+          <ItemImage Image={image?.url ?? DefaultFood} />
         </Grid>
       </Grid>
       <Grid container spacing={0} style={{ paddingBottom: 20, paddingTop: 20 }}>

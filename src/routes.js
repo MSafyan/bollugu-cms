@@ -33,6 +33,7 @@ import ResetPassword from './pages/general/ResetPassword';
 import Settings from './pages/general/Settings';
 import MenuItems from './pages/admins/MenuItems';
 import MenuItem from './pages/general/MenuItem';
+import AddMenuItem from './pages/admins/AddMenuItem';
 
 
 
@@ -49,10 +50,14 @@ export default function Router() {
       path: RouteLandingPage,
       element: <DashboardLayout adminLogin />,
       children: [
+        { path: '', element: <MenuItems /> },
         {
           path: 'menu', element: <Outlet />, children: [
             { path: '', element: <MenuItems /> },
             { path: ':id', element: <MenuItem /> },
+            { path: ':id/edit', element: <AddMenuItem editing /> },
+            { path: 'add', element: <AddMenuItem /> },
+
           ]
         },
 

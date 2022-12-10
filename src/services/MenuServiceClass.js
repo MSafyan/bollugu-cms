@@ -63,15 +63,14 @@ class MenuService extends GenericService {
   );
 
 
-  addCoordinator = ((coordinator, title, body, url, showOn) =>
-    Promise.resolve(this.post(`Menu`, {
-      data: {
-        coordinator,
-        title,
-        body,
-        url,
-        showOn: showOn ?? new Date()
-      }
+  add = ((data) =>
+    Promise.resolve(this.post(`menu-items`, {
+      data
+    })));
+
+  update = ((data, id) =>
+    Promise.resolve(this.put(`menu-items/${id}`, {
+      data
     })));
 
 

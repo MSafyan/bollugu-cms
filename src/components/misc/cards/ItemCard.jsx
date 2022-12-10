@@ -30,7 +30,9 @@ export default ({ item }) => {
             {name ?? 'Food Name Here'}
           </Typography>
 
-          <Typography variant="subtitle2">{description}</Typography>
+          <Typography variant="subtitle2">
+            {description.length > 90 ? description.slice(0, 87) + '...' : description}
+          </Typography>
         </Stack>
       </Card>
     </Link>

@@ -6,19 +6,12 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import CenterLoading from 'src/components/misc/CenterLoading';
-import Dialog from 'src/components/misc/alerts/Dialog';
-import coordinatorService from 'src/services/CoordinatorService';
+import menuService from 'src/services/MenuServiceClass';
 import studentService from 'src/services/StudentService';
-import teacherService from 'src/services/TeacherService';
 import userService from 'src/services/UserService';
 import Page from '../../components/Page';
-import CoordinatorProfile from './profile/CoordinatorProfile';
-import ProfileOptions from './profile/ProfileOptions';
-import StudentResult from './profile/StudentResult';
-import TeacherProfile from './profile/TeacherProfile';
-import UserProfile from './profile/UserProfile';
-import menuService from 'src/services/MenuServiceClass';
 import ItemProfile from './profile/ItemProfile';
+import ProfileOptions from './profile/ProfileOptions';
 
 /*
   Main Working
@@ -99,10 +92,6 @@ export default () => {
       ) : (
         <Container maxWidth="xl">
           <ItemProfile item={item} />
-
-
-
-
           <ProfileOptions
             user={item}
             // handleDelete={handleDelete}
