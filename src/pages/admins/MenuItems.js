@@ -103,7 +103,7 @@ export default ({ }) => {
         {
           loading ? <CenterLoading /> :
             <>
-              <Grid container spacing={3}>
+              <Grid container spacing={3} alignItems="stretch">
                 {
                   Children.toArray(menuItems.map((menuItem) => {
                     const { id, name, price, description, image } = menuItem;

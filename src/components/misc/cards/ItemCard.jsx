@@ -14,7 +14,7 @@ export default ({ item }) => {
   return (
     <Link to={to} target="_blank" color="inherit" underline="hover" component={RouterLink}>
       <Card
-        style={{ backgroundColor: mouse ? palette.primary.lightest : 'white' }}
+        style={{ backgroundColor: mouse ? palette.primary.lightest : 'white', height: '100%' }}
         onMouseEnter={() => setMouse(true)}
         onMouseLeave={() => setMouse(false)}
       >

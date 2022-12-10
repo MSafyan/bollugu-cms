@@ -13,7 +13,7 @@ class MenuService extends GenericService {
   extractData(data) {
     const { id, attributes } = data;
 
-    const { image: file_obj } = attributes;
+    const { image: file_obj, chef: chef_data } = attributes;
 
     let image;
     if (file_obj) {
@@ -24,7 +24,8 @@ class MenuService extends GenericService {
     return {
       id,
       ...attributes,
-      image
+      image,
+      chef: chef_data?.data.id
     };
   }
 

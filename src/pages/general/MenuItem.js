@@ -40,11 +40,15 @@ export default () => {
   /*
     Handlers, Functions
   */
-  const getData = () => {
+  const getData = async () => {
     menuService
       .getOne(ItemID)
-      .then((u) => {
+      .then(async (u) => {
         setItem(u);
+        const user = await userService.getLoggedInUser();
+        console.log("User", user, u)
+        // if (u.chef != user.chef.id)
+        // navigate('/401');
         setLoading(false);
       })
       .catch((_err) => {
