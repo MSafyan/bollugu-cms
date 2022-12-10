@@ -3,21 +3,14 @@
 */
 import { Container } from '@material-ui/core';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import CenterLoading from 'src/components/misc/CenterLoading';
-import Dialog from 'src/components/misc/alerts/Dialog';
-import coordinatorService from 'src/services/CoordinatorService';
-import studentService from 'src/services/StudentService';
-import teacherService from 'src/services/TeacherService';
+import { RouteAdminSetting } from 'src/config/routes';
 import userService from 'src/services/UserService';
 import Page from '../../components/Page';
-import CoordinatorProfile from './profile/CoordinatorProfile';
-import ProfileOptions from './profile/ProfileOptions';
-import StudentResult from './profile/StudentResult';
-import TeacherProfile from './profile/TeacherProfile';
-import UserProfile from './profile/UserProfile';
 import ChefOptions from './profile/ChefOptions';
+import UserProfile from './profile/UserProfile';
 
 /*
   Main Working
@@ -30,17 +23,6 @@ export default () => {
 
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({ name: '' });
-  const [sameUser, setSameUser] = useState(true);
-  const [loggedInUser, setLoggedInUser] = useState({});
-
-  const [showDelete, setShowDelete] = useState(false);
-
-  const userType = (useParams().type || '').toLowerCase();
-  const userID = useParams().id;
-
-  const isCoordinator = userType == 'coordinators';
-  const isTeacher = userType == 'teachers';
-  const isStudent = userType == 'students';
 
   const { name } = user;
 
@@ -51,61 +33,17 @@ export default () => {
     userService
       .getLoggedInUser()
       .then((u) => {
-        setLoggedInUser(u);
-      })
-      .catch((_err) => {
-        navigate('/404');
-      });
-    let funcToCall = userService.getLoggedInUser;
-
-    funcToCall(userID)
-      .then((u) => {
         setUser(u);
+        setLoading(false);
       })
       .catch((_err) => {
         navigate('/404');
-      })
-      .finally(() => setLoading(false));
-  };
-
-  const handleLock = () => {
-    let toCall = userService.lock;
-    if (user.blocked) toCall = userService.unlock;
-
-    toCall(user.u_id)
-      .then(getData)
-      .catch((_err) => {
-        //Error handling lock
       });
   };
 
-  const handleEditStudent = () => {
-    navigate(`/coordinator/madaris/${user.section.batch.madrisa.code}/students/${user.section.batch.id}/${user.section.id}/${user.username}/edit`);
-  };
 
   const handleEdit = () => {
-    navigate(`./edit`);
-  };
-
-  const handleDelete = () => {
-    if (isStudent) {
-      setShowDelete(true);
-    }
-  };
-
-  const handleClose = () => {
-    setShowDelete(false);
-  };
-
-  const handleDeleteFinal = () => {
-    studentService.
-      remove(user.id)
-      .then(() => {
-        navigate(-1);
-      })
-      .catch((_err) => {
-        //Error here.
-      });
+    navigate(RouteAdminSetting);
   };
 
   /*
@@ -113,14 +51,11 @@ export default () => {
   */
   useEffect(getData, []);
 
-
-  console.log("Profile", user);
-
   /*
     Main Design
   */
   return (
-    <Page title={sameUser ? 'Your Profile' : `Viewing ${name}`}>
+    <Page title={"Your Profile"}>
       {loading ? (
         <CenterLoading />
       ) : (

@@ -101,6 +101,8 @@ export default ({ menuItem, editing }) => {
 	};
 
 	const handleImageChange = () => {
+		if (!selectedImage)
+			return;
 		setWrongFile(false);
 		setImageUrl(null);
 		if (selectedImage) {
@@ -147,9 +149,6 @@ export default ({ menuItem, editing }) => {
 								fullWidth
 								autoComplete="name"
 								{...getFieldProps('name')}
-								inputProps={{
-									inputMode: 'name',
-								}}
 								error={Boolean(touched.name && errors.name)}
 								helperText={touched.name && errors.name}
 							/>

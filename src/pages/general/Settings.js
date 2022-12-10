@@ -3,8 +3,8 @@
 */
 import { Container } from '@material-ui/core';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Page from 'src/components/Page';
-import otherService from 'src/services/OtherService';
 import userService from 'src/services/UserService';
 import Form from './forms/SettingsForm';
 
@@ -12,15 +12,14 @@ import Form from './forms/SettingsForm';
     Main Working
 */
 export default () => {
-
-    const [cities, setCities] = useState(null);
     const [loggedInUser, setLoggedInUser] = useState(null);
-
+    const navigate = useNavigate();
 
     function getData() {
         userService
             .getLoggedInUser()
             .then((user) => {
+                console.log("User", user);
                 setLoggedInUser(user);
             })
             .catch(() => {
@@ -28,19 +27,9 @@ export default () => {
             });
     }
 
-    function getCities() {
-        otherService
-            .getCities(0, 400)
-            .then((data) => {
-                setCities(data);
-            })
-            .catch(() => {
-                console.error('Error in getting cities');
-            });
-    }
 
     useEffect(() => {
-        getCities();
+
         getData();
     }, []);
 
@@ -48,7 +37,7 @@ export default () => {
         <Page title='Settings'>
             <Container maxWidth="xl">
                 {loggedInUser &&
-                    <Form cities={cities} loggedInUser={loggedInUser} />
+                    <Form user={loggedInUser} />
                 }
             </Container>
         </Page>

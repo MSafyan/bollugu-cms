@@ -168,12 +168,12 @@ class UserService extends GenericService {
       image
     });
 
-  updateUser = (id, name, email, password, dob, gender, contact, image) => {
-    let body = { name, dob, gender, contact, image, email };
-    if (password && password.length > 3) {
-      body = { ...body, password };
+  updateUser = (body, id) => {
+    if (!(body.password && body.password.length > 3)) {
+      delete body.password;
+      delete body.confirm;
     }
-    return this.put(`users/${id}`, body);
+    return this.put(`chefs/${id}`, { data: body });
   };
 
   updateUserimage = (id, image) => {
@@ -257,28 +257,7 @@ class UserService extends GenericService {
   login = (ID, Password) =>
     new Promise((resolve, reject) => {
       this.loginUser(ID, Password)
-        .then(() => {
-
-          this.get(`users/me`)
-            .then((response) => {
-              console.log("Response", response);
-              if (response.role.name.toLowerCase() == "chef") {
-                let user = { ...this.extractDataDirect(response), isAdmin: true };
-                const encoded = railfencecipher.encodeRailFenceCipher(railfencecipher.encodeRailFenceCipher(JSON.stringify(user), RailFenceSize + 1), RailFenceSize);
-                localStorage.setItem('user', encoded);
-                resolve(user);
-              }
-              else {
-                localStorage.removeItem('token');
-                reject({ message: "User is not a Chef" });
-              }
-
-            })
-            .catch((err) => {
-              localStorage.removeItem('token');
-              reject(err);
-            });
-        })
+        .then(() => resolve(this.getMe()))
         .catch((err) => {
           reject(err);
         });
@@ -289,6 +268,28 @@ class UserService extends GenericService {
     const encoded = railfencecipher.encodeRailFenceCipher(railfencecipher.encodeRailFenceCipher(JSON.stringify(user), RailFenceSize + 1), RailFenceSize);
     localStorage.setItem('user', encoded);
   };
+
+  getMe = () => new Promise((resolve, reject) => {
+    this.get(`users/me`)
+      .then((response) => {
+        console.log("Response", response);
+        if (response.role.name.toLowerCase() == "chef") {
+          let user = { ...this.extractDataDirect(response), isAdmin: true };
+          const encoded = railfencecipher.encodeRailFenceCipher(railfencecipher.encodeRailFenceCipher(JSON.stringify(user), RailFenceSize + 1), RailFenceSize);
+          localStorage.setItem('user', encoded);
+          resolve(user);
+        }
+        else {
+          localStorage.removeItem('token');
+          reject({ message: "User is not a Chef" });
+        }
+
+      })
+      .catch((err) => {
+        localStorage.removeItem('token');
+        reject(err);
+      });
+  });
 
   settingsUpdate = ((name, email, password, dob, gender, contact, image, u_id) =>
     this.updateUser(u_id, name, email, password, dob, gender, contact, image));

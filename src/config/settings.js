@@ -37,3 +37,4 @@ export const maxUploadFileSize = 10 * 1024 * 1024; //10 Mbs
 export const hideFileAlertIn = 3000;
 
 export const Days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+export const Cities = ['Lahore', 'Islamabad'];

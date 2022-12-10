@@ -123,23 +123,26 @@ export const AddFeeSchema = Yup.object().shape({
 
 });
 
-export const SettingsSchema = (password) => Yup.object().shape({
-	contact:
+export const SettingsSchema = Yup.object().shape({
+	firstName:
 		Yup.string()
-			.required('Contact is required')
-			.matches(phoneRegExp, 'Enter valid Contact Number'),
-	email:
+			.required('Name is required'),
+	city:
 		Yup.string()
-			.required('Email is required')
-			.email('Enter correct email'),
-
+			.required('Location is required'),
+	phoneNumber:
+		Yup.string()
+			.required('Contact is required'),
+	cuisineName:
+		Yup.string()
+			.required('Cuisine is required'),
 	password:
 		Yup.string()
 			.min(6, 'Password must be atleast 6 characters')
 			.max(30, 'Password must not be more than 30 characters'),
 	confirm:
 		Yup.string()
-			.equals([password], 'Passwords do not match')
+			.oneOf([Yup.ref('password'), null], 'Passwords must match')
 });
 
 export const AddCourseContentSchema = Yup.object().shape({

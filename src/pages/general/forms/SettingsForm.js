@@ -4,28 +4,25 @@
 import { Icon } from '@iconify/react';
 import { Box, Button, CircularProgress, Grid, IconButton, InputAdornment, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
+import { Alert, Collapse } from '@mui/material';
 import { Form, FormikProvider, useFormik } from 'formik';
-import { useContext, useEffect, useState } from 'react';
-import NumberFormat from 'react-number-format';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import AlertSnackbar from 'src/components/misc/alerts/AlertSnackbar';
 import Dialog from 'src/components/misc/alerts/Dialog';
 import LoadingFormButton from 'src/components/misc/Buttons/LoadingFormButton';
-import { provinces } from 'src/config/data';
 import { SettingsSchema } from 'src/config/form-schemas';
 import { HidePasswordIcon, PasswordIcon, ShowPasswordIcon } from 'src/config/icons';
-import { acceptImageUpload, DefaultAvatar } from 'src/config/settings';
-import { DashboardContext } from 'src/layouts/dashboard';
-import AlertSnackbar from 'src/components/misc/alerts/AlertSnackbar';
+import { RouteAdminProfile } from 'src/config/routes';
+import { acceptFileUpload, acceptImageUpload, Cities, DefaultAvatar, DefaultUploadedFileImage } from 'src/config/settings';
 import coordinatorService from 'src/services/CoordinatorService';
-import studentService from 'src/services/StudentService';
-import teacherService from 'src/services/TeacherService';
 import userService from 'src/services/UserService';
 import { ContentStyle, FormTheme } from '../../../theme/form-pages';
 
 /*
         Main Working
 */
-export default ({ cities, loggedInUser }) => {
+export default ({ user }) => {
 
   /*
           States, Params, Navigation, Query, Variables.
@@ -38,16 +35,19 @@ export default ({ cities, loggedInUser }) => {
   const navigate = useNavigate();
 
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null);
-  const [imageID, setImageID] = useState(null);
-  const [wrongFile, setWrongFile] = useState(false);
+  const [imageUrl, setImageUrl] = useState(user.image?.url);
+  const [imageID, setImageID] = useState(user.image?.id);
+  const [wrongImageFile, setwrongImageFile] = useState(false);
 
-  const userType = (useParams().type || '').toLowerCase();
-  const userID = useParams().id;
-  const ownSettings = !userID;
+  const [selectedIns, setSelectedIns] = useState(null);
+  const [insuranceUrl, setinsuranceUrl] = useState(user.insurance?.url);
+  const [insuranceID, setinsuranceID] = useState(user.insurance?.id);
+  const [wrongInsFile, setwrongInsFile] = useState(false);
 
-  const { reload } = useContext(DashboardContext);
-
+  const [selectedCertificate, setSelectedCertificate] = useState(null);
+  const [certificateUrl, setcertificateUrl] = useState(user.certificate?.url);
+  const [certificateID, setcertificateID] = useState(user.certificate?.id);
+  const [wrongCertificateFile, setWrongCertificateFile] = useState(false);
 
   /*
           Form Setup
@@ -55,15 +55,15 @@ export default ({ cities, loggedInUser }) => {
 
   const formik = useFormik({
     initialValues: {
-      contact: '',
-      province: '',
-      city: '',
-      email: '',
-      address: '',
+      firstName: user.firstName ?? '',
+      city: user.city ?? '',
+      cuisineName: user.cuisineName ?? '',
+      phoneNumber: user.phoneNumber ?? '',
+      long: user.long ?? '',
       password: '',
       confirm: ''
     },
-    validationSchema: SettingsSchema(password),
+    validationSchema: SettingsSchema,
     onSubmit: () => {
       addData();
     }
@@ -77,32 +77,24 @@ export default ({ cities, loggedInUser }) => {
 
   const addData = () => {
 
-    let serviceToCall = userService;
-
-    if (loggedInUser.isCoordinator)
-      serviceToCall = coordinatorService;
-    if (loggedInUser.isTeacher)
-      serviceToCall = teacherService;
-    if (loggedInUser.isStudent)
-      serviceToCall = studentService;
-    const contact = {
-      city: values.city,
-      address: values.address,
-      phone: values.contact
+    const data = {
+      ...values,
+      image: imageID,
+      insurance: insuranceID,
+      certificate: certificateID,
     };
 
-    serviceToCall.settingsUpdate(values.name, values.email, values.password, values.dob, values.gender, contact, imageID, values.u_id, values.a_id)
+    userService.updateUser(data, user.id)
       .then(() => {
-        if (ownSettings)
-          serviceToCall.getOne(values.a_id)
-            .then((updatedUser) => {
-              serviceToCall.reAsignUser(updatedUser);
-              setOpenDia(true);
-            })
-            .catch(() => {
-              setServerError('An Error Occured');
-            });
-        else setOpenDia(true);
+        userService.getMe()
+          .then(() => {
+
+            setOpenDia(true);
+          })
+          .catch(() => {
+            setServerError('An Error Occured');
+          });
+
       })
       .catch(() => {
         setServerError('An Error Occured');
@@ -112,74 +104,15 @@ export default ({ cities, loggedInUser }) => {
       });
   };
 
-  const handleProvinceChange = () => {
-    if (!cities) return;
-    setFieldValue('city', (cities.find(city => city.province == values.province)).id);
-  };
 
-  const handleIDChange = () => {
-    let funcToCall = userService.getLoggedInUser;
-
-    let ID = loggedInUser.id;
-
-    if (ownSettings)
-      userService.getLoggedInUser()
-        .then((data) => {
-          prefillData(data);
-        })
-        .catch(() => {
-          navigate('/401');
-        });
-    else {
-      if (userID) {
-        setSameUser(false);
-        funcToCall = userService.find;
-        switch (userType) {
-          case 'coordinator':
-            funcToCall = coordinatorService.find;
-            break;
-          case 'teacher':
-            funcToCall = teacherService.find;
-            break;
-          case 'student':
-            funcToCall = studentService.find;
-            break;
-        }
-      }
-      funcToCall(ID)
-        .then((data) => {
-          prefillData(data);
-        })
-        .catch(() => {
-          navigate('/404');
-        });
-    }
-
-  };
-
-
-  function prefillData(data) {
-    setFieldValue('ID', data.username);
-    setFieldValue('email', data.email);
-    setFieldValue('name', data.name);
-    setFieldValue('password', data.confirm);
-    setFieldValue('dob', data.dob);
-    setFieldValue('gender', data.gender);
-    setFieldValue('u_id', data.u_id);
-    setFieldValue('address', data.address);
-    setFieldValue('contact', data.phone);
-    setFieldValue('city', data.city_id);
-    setFieldValue('province', data.province);
-    setImageID(data.imageID);
-    setImageUrl(data.image || DefaultAvatar);
-    setFieldValue('a_id', data.id);
-  }
 
   const handleImageChange = () => {
-    setWrongFile(false);
+    if (!selectedImage)
+      return;
+    setwrongImageFile(false);
     setImageUrl(null);
     if (selectedImage) {
-      coordinatorService.upload(selectedImage, values.ID.replaceAll(' ', ''), null)
+      coordinatorService.upload(selectedImage, values.firstName, null)
         .then((response) => {
           setImageID(response.data[0].id);
           setImageUrl(URL.createObjectURL(selectedImage));
@@ -187,18 +120,58 @@ export default ({ cities, loggedInUser }) => {
         .catch((err) => {
           if (err.fileUploadError) {
             setImageUrl(DefaultAvatar);
-            setWrongFile(err.msg);
-            setTimeout(() => setWrongFile(false), hideFileAlertIn);
+            setwrongImageFile(err.msg);
+            setTimeout(() => setwrongImageFile(false), hideFileAlertIn);
           }
         });
+    }
+  };
 
+  const handleInsuranceChange = () => {
+    if (!selectedIns)
+      return;
+    setwrongInsFile(false);
+    setinsuranceUrl(null);
+    if (selectedIns) {
+      coordinatorService.upload(selectedIns, values.firstName + "-insurance", null)
+        .then((response) => {
+          setinsuranceID(response.data[0].id);
+          setinsuranceUrl(URL.createObjectURL(selectedIns));
+        })
+        .catch((err) => {
+          if (err.fileUploadError) {
+            setinsuranceUrl(DefaultUploadedFileImage);
+            setwrongInsFile(err.msg);
+            setTimeout(() => setwrongInsFile(false), hideFileAlertIn);
+          }
+        });
+    }
+  };
+
+  const handleCertificateChange = () => {
+    if (!selectedCertificate)
+      return;
+    setWrongCertificateFile(false);
+    setcertificateUrl(null);
+    if (selectedCertificate) {
+      coordinatorService.upload(selectedCertificate, values.firstName + "-certificate", null)
+        .then((response) => {
+          setcertificateID(response.data[0].id);
+          setcertificateUrl(URL.createObjectURL(selectedCertificate));
+        })
+        .catch((err) => {
+          if (err.fileUploadError) {
+            setcertificateUrl(DefaultUploadedFileImage);
+            setWrongCertificateFile(err.msg);
+            setTimeout(() => setWrongCertificateFile(false), hideFileAlertIn);
+          }
+        });
     }
   };
 
   const handleClose = () => {
     setOpenDia(false);
-    reload();
-    navigate(`../profile`);
+    navigate(RouteAdminProfile);
   };
 
   const handleShowPassword = () => {
@@ -212,9 +185,10 @@ export default ({ cities, loggedInUser }) => {
       Use Effect Hooks.
   */
 
-  useEffect(handleProvinceChange, [values.province]);
-  useEffect(handleIDChange, [loggedInUser]);
+
   useEffect(handleImageChange, [selectedImage]);
+  useEffect(handleInsuranceChange, [selectedIns]);
+  useEffect(handleCertificateChange, [selectedCertificate]);
   useEffect(handlePasswordUpdate, [values.password]);
 
   /*
@@ -232,107 +206,75 @@ export default ({ cities, loggedInUser }) => {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6} md={6}>
               <ThemeProvider theme={FormTheme}>
-                <InputLabel>Contact Number</InputLabel>
-              </ThemeProvider>
-              <NumberFormat
-                fullWidth
-                customInput={TextField}
-                type="text"
-                format="####-#######"
-                allowEmptyFormatting="true"
-                {...getFieldProps('contact')}
-                inputProps={{
-                  inputMode: 'numeric',
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Icon inline="true" style={{ fontSize: 25 }} />
-                    </InputAdornment>
-                  )
-                }}
-                error={Boolean(touched.contact && errors.contact)}
-                helperText={touched.contact && errors.contact}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={6}>
-              <ThemeProvider theme={FormTheme}>
-                <InputLabel>Email</InputLabel>
+                <InputLabel>Name</InputLabel>
               </ThemeProvider>
               <TextField
                 fullWidth
-                autoComplete="currentEmail"
-                {...getFieldProps('email')}
-                inputProps={{
-                  inputMode: 'email'
-                }}
-                error={Boolean(touched.email && errors.email)}
-                helperText={touched.email && errors.email}
+                autoComplete="name"
+                {...getFieldProps('firstName')}
+                error={Boolean(touched.firstName && errors.firstName)}
+                helperText={touched.firstName && errors.firstName}
               />
             </Grid>
-          </Grid>
-        </ContentStyle>
 
-        <ContentStyle>
-          <Grid container spacing={3}>
             <Grid item xs={12} sm={6} md={6}>
               <ThemeProvider theme={FormTheme}>
-                <InputLabel label="province">Province</InputLabel>
+                <InputLabel>Location</InputLabel>
               </ThemeProvider>
               <Select fullWidth
-                {...getFieldProps('province')}
-                error={Boolean(touched.province && errors.province)}
+                {...getFieldProps('city')}
+                error={Boolean(touched.city && errors.city)}
               >
                 {
-                  provinces.map(row => (
-                    <MenuItem key={row} value={row}>{row.replaceAll('_', ' ')}</MenuItem>
+                  Cities.map(row => (
+                    <MenuItem key={row} value={row}>{row}</MenuItem>
                   ))
                 }
               </Select>
             </Grid>
-            {cities &&
-              <Grid item xs={12} sm={6} md={6}>
-                <ThemeProvider theme={FormTheme}>
-                  <InputLabel label="city">City</InputLabel>
-                </ThemeProvider>
-                <Select fullWidth
-                  {...getFieldProps('city')}
-                  error={Boolean(touched.city && errors.city)}
-                >
-                  {
-                    cities.filter((row) => row.province == values.province).map(row => (
-                      <MenuItem key={row.id} value={row.id}>{row.name}</MenuItem>
-                    ))
-                  }
-                </Select>
-              </Grid>}
-          </Grid>
-        </ContentStyle>
 
-
-        <ContentStyle>
-          <Grid container spacing={3}>
             <Grid item xs={12} sm={6} md={6}>
               <ThemeProvider theme={FormTheme}>
-                <InputLabel label="Address">Address</InputLabel>
+                <InputLabel>Contact</InputLabel>
               </ThemeProvider>
               <TextField
-                multiline
-                rows={4}
                 fullWidth
-                {...getFieldProps('address')}
-                error={Boolean(touched.address && errors.address)}
-                helperText={touched.address && errors.address}
+                autoComplete="contact"
+                {...getFieldProps('phoneNumber')}
+                error={Boolean(touched.phoneNumber && errors.phoneNumber)}
+                helperText={touched.phoneNumber && errors.phoneNumber}
               />
             </Grid>
-          </Grid>
-        </ContentStyle>
-
-        <ContentStyle>
-          <Grid container spacing={3}>
             <Grid item xs={12} sm={6} md={6}>
+              <ThemeProvider theme={FormTheme}>
+                <InputLabel>Cuisine</InputLabel>
+              </ThemeProvider>
+              <TextField
+                fullWidth
+                autoComplete="cuisine"
+                {...getFieldProps('cuisineName')}
+                error={Boolean(touched.cuisineName && errors.cuisineName)}
+                helperText={touched.cuisineName && errors.cuisineName}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+              <ThemeProvider theme={FormTheme}>
+                <InputLabel>Bio</InputLabel>
+              </ThemeProvider>
+              <TextField
+                fullWidth
+                multiline
+                maxRows={3}
+                autoComplete="bio"
+                {...getFieldProps('long')}
+                error={Boolean(touched.long && errors.long)}
+                helperText={touched.long && errors.long}
+              />
+            </Grid>
+            <Grid item xs={4} sm={4} md={2}>
 
               <input
+                disabled={values.firstName.length < 2}
                 accept={acceptImageUpload}
                 type="file"
                 id="select-image"
@@ -341,13 +283,69 @@ export default ({ cities, loggedInUser }) => {
               />
               <label htmlFor="select-image">
                 <Button
+                  disabled={values.firstName.length < 2}
                   variant="outlined" color='primary' component="span">
                   Upload Image
                 </Button>
               </label>
-              {(
+              {(imageUrl) && (
                 imageUrl ? <Box mt={2} textAlign="center">
-                  <img src={imageUrl} alt={values.ID} height="100px" />
+                  <img src={imageUrl} alt={values.firstName} height="100px" />
+                </Box> :
+                  <Box mt={2} textAlign="center">
+                    <CircularProgress color="primary" />
+                  </Box>
+              )}
+
+            </Grid>
+
+            <Grid item xs={4} sm={4} md={2}>
+
+              <input
+                disabled={values.firstName.length < 2}
+                accept={acceptFileUpload}
+                type="file"
+                id="select-insurance"
+                style={{ display: 'none' }}
+                onChange={e => setSelectedIns(e.target.files[0])}
+              />
+              <label htmlFor="select-insurance">
+                <Button
+                  disabled={values.firstName.length < 2}
+                  variant="outlined" color='primary' component="span">
+                  Upload insurance
+                </Button>
+              </label>
+              {(insuranceUrl) && (
+                insuranceUrl ? <Box mt={2} textAlign="center">
+                  <img src={DefaultUploadedFileImage} alt={values.firstName + "Insurance"} height="100px" />
+                </Box> :
+                  <Box mt={2} textAlign="center">
+                    <CircularProgress color="primary" />
+                  </Box>
+              )}
+
+            </Grid>
+
+            <Grid item xs={4} sm={4} md={2}>
+              <input
+                disabled={values.firstName.length < 2}
+                accept={acceptFileUpload}
+                type="file"
+                id="select-certificate"
+                style={{ display: 'none' }}
+                onChange={e => setSelectedCertificate(e.target.files[0])}
+              />
+              <label htmlFor="select-certificate">
+                <Button
+                  disabled={values.firstName.length < 2}
+                  variant="outlined" color='primary' component="span">
+                  Upload certificate
+                </Button>
+              </label>
+              {(certificateUrl) && (
+                certificateUrl ? <Box mt={2} textAlign="center">
+                  <img src={DefaultUploadedFileImage} alt={values.firstName + "certificate"} height="100px" />
                 </Box> :
                   <Box mt={2} textAlign="center">
                     <CircularProgress color="primary" />
@@ -357,6 +355,10 @@ export default ({ cities, loggedInUser }) => {
             </Grid>
           </Grid>
         </ContentStyle>
+
+        <Typography variant="h6" gutterBottom>
+          Update Password
+        </Typography>
 
         <ContentStyle>
           <Grid container spacing={3}>
@@ -423,16 +425,16 @@ export default ({ cities, loggedInUser }) => {
         >
           Your data is updated
         </Dialog>
-        <AlertSnackbar severity="warning" open={wrongFile}>
+        <AlertSnackbar severity="warning" open={wrongImageFile || wrongInsFile}>
           Extension not allowed
         </AlertSnackbar>
 
-        <LoadingFormButton loading={(isSubmitting || !imageUrl)}>
+        <LoadingFormButton loading={(isSubmitting || (!!selectedImage && !imageUrl) || (!!selectedIns && !insuranceUrl))}>
           Save
         </LoadingFormButton>
         {serverError &&
           <Stack sx={{ width: '50%' }} marginTop={3}>
-            <Collapse in={openServerError}>
+            <Collapse in={!!serverError}>
               <Alert severity="error">
                 {serverError}
               </Alert>
