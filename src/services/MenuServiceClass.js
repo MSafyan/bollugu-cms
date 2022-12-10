@@ -33,7 +33,9 @@ class MenuService extends GenericService {
     (resolve, reject) => {
       const query = qs.stringify(
         {
-          chef,
+          filters: {
+            chef
+          },
           populate: "*"
         });
       this.get(`menu-items?${query}`)

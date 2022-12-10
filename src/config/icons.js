@@ -40,6 +40,7 @@ import personFill from '@iconify/icons-eva/person-fill';
 import foodMenu from '@iconify/icons-bx/food-menu';
 import fastFoodOutline from '@iconify/icons-ion/fast-food-outline';
 import currencyCircleDollarLight from '@iconify/icons-ph/currency-circle-dollar-light';
+import fastFoodSharp from '@iconify/icons-ion/fast-food-sharp';
 
 export const ViewIcon = accountEye;
 export const ViewIcon2 = eyeFill;
@@ -90,3 +91,4 @@ export const ProfileIcon = personFill;
 export const MenuIcon = foodMenu;
 export const OrdersIcon = fastFoodOutline;
 export const CurrencyIcon = currencyCircleDollarLight;
+export const OrderListIcon = fastFoodSharp;

@@ -4,10 +4,10 @@ export const defaultPassword = '123456';
 export const defaultCoordinatortPassword = defaultPassword;
 export const defaultTeacherPassword = defaultPassword;
 export const defaultStudentPassword = defaultPassword;
-export const rowsPerPageList = [10, 15, 30, 50, 100];
-export const defaultPerPage = 10;
+export const rowsPerPageList = [25, 50, 100, 200];
+export const defaultPerPage = 25;
 export const BackendURL = 'https://chezchef.herokuapp.com/';
-export const BackendURLAPI = 'https://chezchef.herokuapp.com/api/';
+export const BackendURLAPI = 'https://api.chezchefs.com/api/';
 
 
 export const LoginImage = "/static/illustrations/Chef.gif";
@@ -37,4 +37,56 @@ export const maxUploadFileSize = 10 * 1024 * 1024; //10 Mbs
 export const hideFileAlertIn = 3000;
 
 export const Days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-export const Cities = ['Lahore', 'Islamabad'];
+export const Cities = ["Mississauga", "Oakville", "Milton", "Brampton", "Toronto"];
+export const cuisines = ["American",
+    "Carribbean",
+    "Thai",
+    "Spanish",
+    "British",
+    "Central Asian",
+    "Eastern European",
+    "Pakistani",
+    "Maghreb",
+    "Canadian",
+    "Cajun",
+    "Moroccan",
+    "Levantine",
+    "Cuban",
+    "European",
+    "Japanese",
+    "Italian",
+    "Mediterranean",
+    "German",
+    "Arab",
+    "Indonesian",
+    "Brazilian",
+    "Turkish",
+    "Russian",
+    "Middle Eastern",
+    "Haitian",
+    "Lebanese",
+    "North African",
+    "Irish",
+    "Chinese",
+    "Indian",
+    "African",
+    "French",
+    "Latin American",
+    "South American",
+    "West African",
+    "Greek",
+    "Mexican",
+    "Egyptian",
+    "Korean",
+    "Scottish",
+    "Portuguese"];
+
+export const ORDER_STATUS = {
+    'Order_placed': 'Order Placed',
+    'Being_Prepared': 'Being Prepared',
+    'In_Transit': 'In Transit',
+    'Delivered': 'Delivered',
+    'Cancel': 'Cancelled'
+};
+
+export const ORDER_STATUS_ORDER = ['Order_placed', 'Being_Prepared', 'In_Transit', 'Delivered', 'Cancel'];

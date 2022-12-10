@@ -1,4 +1,4 @@
-export const RouteOrders = '/madaris';
+export const RouteOrders = '/orders';
 export const RouteCoordinators = '/coordinators';
 export const RouteCourses = '/courses';
 export const RouteLandingPage = '/';

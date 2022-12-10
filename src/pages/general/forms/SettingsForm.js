@@ -14,7 +14,7 @@ import LoadingFormButton from 'src/components/misc/Buttons/LoadingFormButton';
 import { SettingsSchema } from 'src/config/form-schemas';
 import { HidePasswordIcon, PasswordIcon, ShowPasswordIcon } from 'src/config/icons';
 import { RouteAdminProfile } from 'src/config/routes';
-import { acceptFileUpload, acceptImageUpload, Cities, DefaultAvatar, DefaultUploadedFileImage } from 'src/config/settings';
+import { acceptFileUpload, acceptImageUpload, Cities, cuisines, DefaultAvatar, DefaultUploadedFileImage } from 'src/config/settings';
 import coordinatorService from 'src/services/CoordinatorService';
 import userService from 'src/services/UserService';
 import { ContentStyle, FormTheme } from '../../../theme/form-pages';
@@ -245,17 +245,21 @@ export default ({ user }) => {
                 helperText={touched.phoneNumber && errors.phoneNumber}
               />
             </Grid>
+
             <Grid item xs={12} sm={6} md={6}>
               <ThemeProvider theme={FormTheme}>
                 <InputLabel>Cuisine</InputLabel>
               </ThemeProvider>
-              <TextField
-                fullWidth
-                autoComplete="cuisine"
+              <Select fullWidth
                 {...getFieldProps('cuisineName')}
                 error={Boolean(touched.cuisineName && errors.cuisineName)}
-                helperText={touched.cuisineName && errors.cuisineName}
-              />
+              >
+                {
+                  cuisines.map(row => (
+                    <MenuItem key={row} value={row}>{row}</MenuItem>
+                  ))
+                }
+              </Select>
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
               <ThemeProvider theme={FormTheme}>

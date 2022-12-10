@@ -24,6 +24,7 @@ import Scrollbar from '../../../components/Scrollbar';
 import SearchNotFound from '../../../components/misc/alerts/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../components/misc/table';
 import madrisaService from '../../../services/MadrisaService';
+import { getDateTime } from 'src/utils/dateTime';
 
 /*
   Global Variables, Functions
@@ -54,13 +55,9 @@ export default () => {
     States, Params, Navigation, Query, Variables.
   */
   const TableHeader = [
-    { id: 'code', label: 'ID', align: 'left' },
-    { id: 'name', label: 'Name', align: 'left' },
-    { id: 'students', label: 'Students', align: 'left' },
-    { id: 'teachers', label: 'Teachers', align: 'left' },
-    { id: 'cid', label: 'Co ID', align: 'left' },
-    { id: 'cname', label: 'Co Name', align: 'left' },
-    { id: 'address', label: 'Address', align: 'left' }
+    { id: 'id', label: 'id', align: 'left' },
+    { id: 'createdAt', label: 'Date', align: 'left' },
+    { id: 'status', label: 'Status', align: 'left' }
   ];
 
   const [page, setPage] = useState(0);
@@ -69,8 +66,6 @@ export default () => {
   const [orderBy, setOrderBy] = useState(TableHeader[0].id);
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(defaultPerPage);
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
 
   const navigate = useNavigate();
 
@@ -81,34 +76,6 @@ export default () => {
   /*
     Handlers, Functions
   */
-  const getData = () => {
-    setLoading(true);
-    madrisaService
-      .getAll(0, 400, [
-        'contact.city',
-        'coordinators.user',
-        'batches.sections.students',
-        'teachers'
-      ])
-      .then((madaris) => {
-        for (const madrisa of madaris) {
-          let students = 0;
-          for (const batch of madrisa.batches) {
-            for (const section of batch.sections) {
-              students += section.students.length;
-            }
-          }
-          madrisa.students = students;
-        }
-        setData(madaris);
-      })
-      .catch((err) => {
-        if (err.response) if (err.response.status === 401) navigate('/logout');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
 
   const handleRequestSort = (_event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -188,124 +155,98 @@ export default () => {
   */
   return (
     <>
-      {loading ? (
-        <CenterLoading />
-      ) : (
-        <>
-          <Card>
-            <UserListToolbar
-              numSelected={selected.length}
-              filterName={filterName}
-              onFilterName={handleFilterByName}
-            />
-            <Scrollbar>
-              <TableContainer sx={{ minWidth: 800 }}>
-                <Table>
-                  <UserListHead
-                    order={order}
-                    orderBy={orderBy}
-                    headLabel={TableHeader}
-                    rowCount={data.length}
-                    numSelected={selected.length}
-                    onRequestSort={handleRequestSort}
-                    onSelectAllClick={handleSelectAllClick}
-                    hideCheckBoxes={true}
-                  />
-                  <TableBody>
-                    {filteredUsers
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row) => {
-                        const {
-                          id,
-                          code,
-                          name,
-                          blocked,
-                          address,
-                          province,
-                          city,
-                          students,
-                          teachers,
-                          cid,
-                          cname
-                        } = row;
-                        const isItemSelected = selected.indexOf(name) !== -1;
+      <Card>
+        <UserListToolbar
+          numSelected={selected.length}
+          filterName={filterName}
+          onFilterName={handleFilterByName}
+        />
+        <Scrollbar>
+          <TableContainer sx={{ minWidth: 800 }}>
+            <Table>
+              <UserListHead
+                order={order}
+                orderBy={orderBy}
+                headLabel={TableHeader}
+                rowCount={data.length}
+                numSelected={selected.length}
+                onRequestSort={handleRequestSort}
+                onSelectAllClick={handleSelectAllClick}
+                hideCheckBoxes={true}
+              />
+              <TableBody>
+                {filteredUsers
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => {
+                    const { id, createdAt, status } = row;
+                    const isItemSelected = selected.indexOf(name) !== -1;
 
-                        return (
-                          <TableRow
-                            hover
-                            component={Link}
-                            to={`/admin/madaris/${id}`}
-                            key={name}
-                            tabIndex={-1}
-                            role="checkbox"
-                            selected={isItemSelected}
-                            aria-checked={isItemSelected}
-                            style={{
-                              backgroundColor: blocked
-                                ? palette.background.locked
-                                : palette.background.hover,
-                              textDecoration: 'none'
-                            }}
-                          >
-                            <TableCell padding="checkbox">
-                              {/* <Checkbox
+                    return (
+                      <TableRow
+                        hover
+                        component={Link}
+                        to={`/admin/madaris/${id}`}
+                        key={name}
+                        tabIndex={-1}
+                        role="checkbox"
+                        selected={isItemSelected}
+                        aria-checked={isItemSelected}
+                        style={{
+                          backgroundColor: blocked
+                            ? palette.background.locked
+                            : palette.background.hover,
+                          textDecoration: 'none'
+                        }}
+                      >
+                        <TableCell padding="checkbox">
+                          {/* <Checkbox
                                 checked={isItemSelected}
                                 onChange={(event) => handleClick(event, name)}
                               /> */}
-                            </TableCell>
-                            <TableCell>
-                              <Typography variant="subtitle2" noWrap>
-                                {code}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="left">{name}</TableCell>
-                            <TableCell align="left">{students}</TableCell>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="subtitle2" noWrap>
+                            {id}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="left">{getDateTime(createdAt)}</TableCell>
+                        <TableCell align="left">{status}</TableCell>
 
-                            <TableCell align="left">{teachers.length}</TableCell>
-                            <TableCell align="left">{cid}</TableCell>
-                            <TableCell align="left">{cname}</TableCell>
-                            <TableCell align="left">{`${address}, ${city}, ${province}`}</TableCell>
-
-                            <TableCell align="right" onClick={handleMoreMenuCell}>
-                              <UserMoreMenu
-                                ID={[id]}
-                                Options={blocked ? MORE_MENU_LOCKED : MORE_MENU_UNLOCKED}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    {emptyRows > 0 && (
-                      <TableRow style={{ height: 53 * emptyRows }}>
-                        <TableCell colSpan={6} />
-                      </TableRow>
-                    )}
-                  </TableBody>
-                  {isUserNotFound && (
-                    <TableBody>
-                      <TableRow>
-                        <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                          <SearchNotFound searchQuery={filterName} />
+                        <TableCell align="right" onClick={handleMoreMenuCell}>
+                          <UserMoreMenu ID={[id]} Options={MORE_MENU_LOCKED} />
                         </TableCell>
                       </TableRow>
-                    </TableBody>
-                  )}
-                </Table>
-              </TableContainer>
-            </Scrollbar>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+              {isUserNotFound && (
+                <TableBody>
+                  <TableRow>
+                    <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                      <SearchNotFound searchQuery={filterName} />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              )}
+            </Table>
+          </TableContainer>
+        </Scrollbar>
 
-            <TablePagination
-              rowsPerPageOptions={rowsPerPageList}
-              component="div"
-              count={data.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Card>
-        </>
-      )}
+        <TablePagination
+          rowsPerPageOptions={rowsPerPageList}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Card>
     </>
   );
 };
