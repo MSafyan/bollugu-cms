@@ -3,12 +3,7 @@ import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 
-
-import {
-  RouteForgetPass,
-  RouteLandingPage,
-  RouteResetPass
-} from './config/routes';
+import { RouteForgetPass, RouteLandingPage, RouteResetPass } from './config/routes';
 
 
 import AddMenuItem from './pages/admins/AddMenuItem';
@@ -24,15 +19,20 @@ import ResetPassword from './pages/general/ResetPassword';
 import Settings from './pages/general/Settings';
 import Success from './pages/general/Success';
 
-
-
-
-
 export default function Router() {
   return useRoutes([
     {
       path: RouteLandingPage,
+<<<<<<< HEAD
       element: <LogoOnlyLayout loginPage />,
+=======
+      element: <LogoOnlyLayout adminLogin loginPage />,
+      children: [{ path: '/', element: <Login admin /> }]
+    },
+    {
+      path: RouteLandingPage,
+      element: <LogoOnlyLayout adminLogin loginPage />,
+>>>>>>> 2380ab7ff9fb0d7e4bf8b4ca01ef6e2361b5868b
       children: [{ path: 'login', element: <Login admin /> }]
     },
     {
@@ -41,12 +41,18 @@ export default function Router() {
       children: [
         { path: '', element: <MenuItems /> },
         {
-          path: 'menu', element: <Outlet />, children: [
+          path: 'menu',
+          element: <Outlet />,
+          children: [
             { path: '', element: <MenuItems /> },
+<<<<<<< HEAD
             { path: ':id', element: <MenuItem /> },
             { path: ':id/edit', element: <AddMenuItem editing /> },
             { path: 'add', element: <AddMenuItem /> },
 
+=======
+            { path: ':id', element: <MenuItem /> }
+>>>>>>> 2380ab7ff9fb0d7e4bf8b4ca01ef6e2361b5868b
           ]
         },
 

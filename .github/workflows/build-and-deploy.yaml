@@ -8,10 +8,10 @@ jobs:
     name: Build and Deploy
     runs-on: ubuntu-latest
     env:
-      BUCKET: chezchef.com
+      BUCKET: app.chezchefs.com
       DIST: build
       REGION: ca-central-1
-      DIST_ID: E2TPP7NIKONL8B
+      DIST_ID: E1BXNVP9RL5D01
 
     steps:
       - name: Checkout
