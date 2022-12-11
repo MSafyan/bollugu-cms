@@ -36,7 +36,10 @@ class MenuService extends GenericService {
           filters: {
             chef
           },
-          populate: "*"
+          populate: "*",
+          pagniation: {
+            pageSize: 1000
+          }
         });
       this.get(`menu-items?${query}`)
 
