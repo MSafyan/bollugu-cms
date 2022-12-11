@@ -12,7 +12,7 @@ export default ({ item }) => {
   const [mouse, setMouse] = useState(false);
 
   return (
-    <Link to={to} target="_blank" color="inherit" underline="hover" component={RouterLink}>
+    <Link to={to} color="inherit" underline="hover" component={RouterLink}>
       <Card
         style={{ backgroundColor: mouse ? palette.primary.lightest : 'white', height: '100%' }}
         onMouseEnter={() => setMouse(true)}
