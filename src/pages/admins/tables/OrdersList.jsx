@@ -26,11 +26,13 @@ import Scrollbar from '../../../components/Scrollbar';
 
 /*
   Global Variables, Functions
+  always and new
 */
 
 /*
   Main Working
 */
+
 export default ({ data, pagination, setPagination, setLoading, getData, getData2 }) => {
   /*
     States, Params, Navigation, Query, Variables.
