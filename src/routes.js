@@ -5,7 +5,6 @@ import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 
 import { RouteForgetPass, RouteLandingPage, RouteResetPass } from './config/routes';
 
-
 import AddMenuItem from './pages/admins/AddMenuItem';
 import MenuItems from './pages/admins/MenuItems';
 import Orders from './pages/admins/Orders';
@@ -24,6 +23,11 @@ export default function Router() {
     {
       path: RouteLandingPage,
       element: <LogoOnlyLayout loginPage />,
+      children: [{ path: '/', element: <Login admin /> }]
+    },
+    {
+      path: RouteLandingPage,
+      element: <LogoOnlyLayout loginPage />,
       children: [{ path: 'login', element: <Login admin /> }]
     },
     {
@@ -38,14 +42,13 @@ export default function Router() {
             { path: '', element: <MenuItems /> },
             { path: ':id', element: <MenuItem /> },
             { path: ':id/edit', element: <AddMenuItem editing /> },
-            { path: 'add', element: <AddMenuItem /> },
-
+            { path: 'add', element: <AddMenuItem /> }
           ]
         },
 
         { path: 'profile', element: <Profile /> },
         { path: 'settings', element: <Settings /> },
-        { path: 'orders', element: <Orders /> },
+        { path: 'orders', element: <Orders /> }
       ]
     },
 
