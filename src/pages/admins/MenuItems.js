@@ -13,6 +13,7 @@ import ListPageTitle from 'src/components/misc/ListPageTitle';
 import { DefaultFood } from 'src/config/settings';
 import menuService from 'src/services/MenuServiceClass';
 import Page from '../../components/Page';
+import userService from 'src/services/UserService';
 
 
 /*
@@ -34,11 +35,13 @@ export default ({ }) => {
   const handleAddButton = () => {
     navigate('./add');
   };
-  const getData = () => {
+  const getData = async () => {
 
     setLoading(true);
+
+    const user = userService.getLoggedInUser();
     menuService
-      .getAll(1)
+      .getAll(user.id)
       .then((response) => {
 
         setmenuItems(response);
