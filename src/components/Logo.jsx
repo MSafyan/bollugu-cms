@@ -13,7 +13,7 @@ export default function Logo({ sx }) {
     <Box
       margin="auto"
       component="img"
-      src="/static/logo.webp"
+      src="/static/logo.gif"
       sx={{ width: 180, height: '100%', ...sx }}
     />
   );

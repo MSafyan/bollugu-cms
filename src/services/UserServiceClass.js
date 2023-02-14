@@ -29,7 +29,6 @@ class UserService extends GenericService {
         });
     });
 
-
   forgetPassword = (email) =>
     new Promise((resolve, reject) => {
       this.tokenUpdate();
@@ -61,28 +60,8 @@ class UserService extends GenericService {
     });
 
   extractDataDirect(u) {
-    const { image: file_obj, insurance: i_obj, certificate: c_obj, } = u.info;
-    let image;
-    if (file_obj) {
-      image = otherService.extractFileDirect(file_obj);
-    }
-
-    let insurance;
-    if (i_obj) {
-      insurance = otherService.extractFileDirect(i_obj);
-    }
-
-    let certificate;
-    if (c_obj) {
-      certificate = otherService.extractFileDirect(c_obj);
-    }
-
-    console.log("Got", file_obj, i_obj, c_obj);
-
     return {
-      ...u,
-      ...u.info,
-      image, insurance, certificate
+      ...u
     };
   }
 
@@ -109,16 +88,17 @@ class UserService extends GenericService {
     new Promise((resolve, reject) => {
       const user = localStorage.getItem('user');
       if (user) {
-        const decode = railfencecipher.decodeRailFenceCipher(railfencecipher.decodeRailFenceCipher(user, RailFenceSize), RailFenceSize + 1);
+        const decode = railfencecipher.decodeRailFenceCipher(
+          railfencecipher.decodeRailFenceCipher(user, RailFenceSize),
+          RailFenceSize + 1
+        );
         resolve(JSON.parse(decode));
-      }
-      else {
+      } else {
         localStorage.removeItem('token');
         this.tokenUpdate();
         reject(new Error('Not Logged In'));
       }
     });
-
 
   updateUser = (body, id) => {
     if (!(body.password && body.password.length > 3)) {
@@ -129,10 +109,9 @@ class UserService extends GenericService {
   };
 
   updateUserimage = (id, image) => {
-    let body = { image, };
+    let body = { image };
     return this.put(`users/${id}`, body);
   };
-
 
   extractData(attributes) {
     const { user: user_object } = attributes;
@@ -157,7 +136,6 @@ class UserService extends GenericService {
             ({ name: city, province } = city_attributes);
             ({ id: city_id } = city_data);
           }
-
         }
         if (img) {
           const { data: img_data } = img;
@@ -183,7 +161,7 @@ class UserService extends GenericService {
       city,
       city_id,
       province,
-      dob,
+      dob
     };
   }
 
@@ -196,55 +174,55 @@ class UserService extends GenericService {
         });
     });
 
-
-  getMe = () => new Promise((resolve, reject) => {
-    this.get(`users/me`)
-      .then((response) => {
-        console.log("Response", response);
-        if (response.role.name.toLowerCase() == "chef") {
-          let user = this.extractDataDirect(response)
-          const encoded = railfencecipher.encodeRailFenceCipher(railfencecipher.encodeRailFenceCipher(JSON.stringify(user), RailFenceSize + 1), RailFenceSize);
-          localStorage.setItem('user', encoded);
-          resolve(user);
-        }
-        else {
+  getMe = () =>
+    new Promise((resolve, reject) => {
+      this.get(`users/me`)
+        .then((response) => {
+          console.log('Response', response);
+          if (true) {
+            let user = this.extractDataDirect(response);
+            const encoded = railfencecipher.encodeRailFenceCipher(
+              railfencecipher.encodeRailFenceCipher(JSON.stringify(user), RailFenceSize + 1),
+              RailFenceSize
+            );
+            localStorage.setItem('user', encoded);
+            resolve(user);
+          } else {
+            localStorage.removeItem('token');
+            reject({ message: 'User is not a Chef' });
+          }
+        })
+        .catch((err) => {
           localStorage.removeItem('token');
-          reject({ message: "User is not a Chef" });
-        }
+          reject(err);
+        });
+    });
 
-      })
-      .catch((err) => {
-        localStorage.removeItem('token');
-        reject(err);
-      });
-  });
-
-  checkOnBoarding = () => new Promise(
-    (resolve, reject) => {
+  checkOnBoarding = () =>
+    new Promise((resolve, reject) => {
       this.get(`wallets/connectedAccount`)
         .then((response) => {
           if (response.data?.attributes?.accountLink) {
             resolve({ onboarding: false, url: response.data.attributes.accountLink });
-          }
-          else {
-            this.get(`wallets/loginToStripe`).then((response) => {
-              resolve({ onboarding: true, url: response.url });
-            }).catch((err) => reject(err));
+          } else {
+            this.get(`wallets/loginToStripe`)
+              .then((response) => {
+                resolve({ onboarding: true, url: response.url });
+              })
+              .catch((err) => reject(err));
           }
         })
         .catch((err) => reject(err));
-    }
-  );
+    });
 
-  completeOnBoarding = () => new Promise(
-    (resolve, reject) => {
+  completeOnBoarding = () =>
+    new Promise((resolve, reject) => {
       this.get(`wallets/boardingSuccess`)
         .then(() => {
-          resolve()
+          resolve();
         })
         .catch((err) => reject(err));
-    }
-  );
+    });
 }
 
 export default UserService;

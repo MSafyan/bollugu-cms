@@ -12,7 +12,7 @@ import LoginForm from './forms/LoginForm';
   Main Working
 */
 export default ({}) => {
-  let loginDisplay = 'Chef';
+  let loginDisplay = 'Admin';
   let image = LoginImage;
 
   return (

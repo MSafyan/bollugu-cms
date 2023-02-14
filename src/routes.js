@@ -7,11 +7,32 @@ import { RouteForgetPass, RouteLandingPage, RouteResetPass } from './config/rout
 
 import AddMenuItem from './pages/admins/AddMenuItem';
 import MenuItems from './pages/admins/MenuItems';
+import MenuItem from './pages/general/MenuItem';
+
+import AddServices from './pages/admins/AddServices';
+import Services from './pages/admins/Services';
+import Service from './pages/general/Service';
+
+import AddBackgrounds from './pages/admins/Backgrounds/AddServices';
+import Backgrounds from './pages/admins/Backgrounds/Services';
+import Background from './pages/general/Background';
+
+import AddFavicons from './pages/admins/Favicons/AddServices';
+import Favicons from './pages/admins/Favicons/Services';
+import Favicon from './pages/general/Favicon';
+
+import AddRobotsTxts from './pages/admins/RobotsTxts/AddServices';
+import RobotsTxts from './pages/admins/RobotsTxts/Services';
+import RobotsTxt from './pages/general/Robot';
+
+import AddSitemaps from './pages/admins/Sitemaps/AddServices';
+import Sitemaps from './pages/admins/Sitemaps/Services';
+import Sitemap from './pages/general/Sitemap';
+
 import Orders from './pages/admins/Orders';
 import ForgetPassword from './pages/general/ForgetPassword';
 import Login from './pages/general/Login';
 import Logout from './pages/general/Logout';
-import MenuItem from './pages/general/MenuItem';
 import PageError from './pages/general/PageError';
 import Profile from './pages/general/Profile';
 import ResetPassword from './pages/general/ResetPassword';
@@ -43,6 +64,56 @@ export default function Router() {
             { path: ':id', element: <MenuItem /> },
             { path: ':id/edit', element: <AddMenuItem editing /> },
             { path: 'add', element: <AddMenuItem /> }
+          ]
+        },
+        {
+          path: 'services',
+          element: <Outlet />,
+          children: [
+            { path: '', element: <Services /> },
+            { path: ':id', element: <Service /> },
+            { path: ':id/edit', element: <AddServices editing /> },
+            { path: 'add', element: <AddServices /> }
+          ]
+        },
+        {
+          path: 'backgrounds',
+          element: <Outlet />,
+          children: [
+            { path: '', element: <Backgrounds /> },
+            { path: ':id', element: <Background /> },
+            { path: ':id/edit', element: <AddBackgrounds editing /> },
+            { path: 'add', element: <AddBackgrounds /> }
+          ]
+        },
+        {
+          path: 'favicons',
+          element: <Outlet />,
+          children: [
+            { path: '', element: <Favicons /> },
+            { path: ':id', element: <Favicon /> },
+            { path: ':id/edit', element: <AddFavicons editing /> },
+            { path: 'add', element: <AddServices /> }
+          ]
+        },
+        {
+          path: 'robots',
+          element: <Outlet />,
+          children: [
+            { path: '', element: <RobotsTxts /> },
+            { path: ':id', element: <RobotsTxt /> },
+            { path: ':id/edit', element: <AddRobotsTxts editing /> },
+            { path: 'add', element: <AddRobotsTxts /> }
+          ]
+        },
+        {
+          path: 'sitemaps',
+          element: <Outlet />,
+          children: [
+            { path: '', element: <Sitemaps /> },
+            { path: ':id', element: <Sitemap /> },
+            { path: ':id/edit', element: <AddSitemaps editing /> },
+            { path: 'add', element: <AddSitemaps /> }
           ]
         },
 

@@ -10,7 +10,7 @@ export default ({ item }) => {
   const [mouse, setMouse] = useState(false);
 
   return (
-    <Link to={to} color="inherit" underline="hover" component={RouterLink}>
+    <Link to={`${to}/edit`} color="inherit" underline="hover" component={RouterLink}>
       <Card
         style={{ backgroundColor: mouse ? palette.primary.lightest : 'white', height: '100%' }}
         onMouseEnter={() => setMouse(true)}
@@ -22,7 +22,7 @@ export default ({ item }) => {
 
         <Stack spacing={1} sx={{ p: 3 }}>
           <Typography variant="h5" noWrap>
-            {title ?? 'Food Name Here'}
+            {title ?? 'Sitemap Here'}
           </Typography>
         </Stack>
       </Card>

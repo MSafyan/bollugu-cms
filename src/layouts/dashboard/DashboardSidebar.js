@@ -25,7 +25,6 @@ const RootStyle = styled('div')(({ theme }) => ({
   }
 }));
 
-
 // ----------------------------------------------------------------------
 
 DashboardSidebar.propTypes = {
@@ -60,8 +59,8 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         '& .simplebar-content': { height: '100%', display: 'flex', flexDirection: 'column' }
       }}
     >
-      <Box sx={{ px: 2.5, py: 6, pb: 10 }}>
-        <Logo />
+      <Box sx={{ p: 2.5, display: 'flex', alignItems: 'center' }}>
+        <Logo sx={{ width: '100px' }} />
         <Typography
           style={{ fontFamily: 'Public Sans,sans-serif', fontSize: '10px', textAlign: 'center' }}
         >
