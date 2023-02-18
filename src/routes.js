@@ -5,6 +5,26 @@ import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 
 import { RouteForgetPass, RouteLandingPage, RouteResetPass } from './config/routes';
 
+import AddHomeTops from './pages/admins/HomeTopPage/AddServices';
+import HomeTops from './pages/admins/HomeTopPage/Services';
+import HomeTop from './pages/general/HomeTopPage';
+
+import AddHomeSections from './pages/admins/HomeSectionsPage/AddServices';
+import HomeSections from './pages/admins/HomeSectionsPage/Services';
+import HomeSection from './pages/general/HomeSectionsPage';
+
+import AddHomeFooters from './pages/admins/HomeFooter/AddServices';
+import HomeFooters from './pages/admins/HomeFooter/Services';
+import HomeFooter from './pages/general/HomeFooter';
+
+import AddWorks from './pages/admins/Work/AddServices';
+import Works from './pages/admins/Work/Services';
+import Work from './pages/general/Work';
+
+import AddAbouts from './pages/admins/About/AddServices';
+import Abouts from './pages/admins/About/Services';
+import About from './pages/general/About';
+
 import AddMenuItem from './pages/admins/AddMenuItem';
 import MenuItems from './pages/admins/MenuItems';
 import MenuItem from './pages/general/MenuItem';
@@ -57,6 +77,56 @@ export default function Router() {
       children: [
         { path: '', element: <MenuItems /> },
         {
+          path: 'homeSectionsPage',
+          element: <Outlet />,
+          children: [
+            { path: '', element: <HomeSections /> },
+            { path: ':id', element: <HomeSection /> },
+            { path: ':id/edit', element: <AddHomeSections editing /> },
+            { path: 'add', element: <AddHomeSections /> }
+          ]
+        },
+        {
+          path: 'homeTopPage',
+          element: <Outlet />,
+          children: [
+            { path: '', element: <HomeTops /> },
+            { path: ':id', element: <HomeTop /> },
+            { path: ':id/edit', element: <AddHomeTops editing /> },
+            { path: 'add', element: <AddHomeTops /> }
+          ]
+        },
+        {
+          path: 'homeFooter',
+          element: <Outlet />,
+          children: [
+            { path: '', element: <HomeFooters /> },
+            { path: ':id', element: <HomeFooter /> },
+            { path: ':id/edit', element: <AddHomeFooters editing /> },
+            { path: 'add', element: <AddHomeFooters /> }
+          ]
+        },
+        {
+          path: 'about',
+          element: <Outlet />,
+          children: [
+            { path: '', element: <Abouts /> },
+            { path: ':id', element: <About /> },
+            { path: ':id/edit', element: <AddAbouts editing /> },
+            { path: 'add', element: <AddAbouts /> }
+          ]
+        },
+        {
+          path: 'work',
+          element: <Outlet />,
+          children: [
+            { path: '', element: <Works /> },
+            { path: ':id', element: <Work /> },
+            { path: ':id/edit', element: <AddWorks editing /> },
+            { path: 'add', element: <AddWorks /> }
+          ]
+        },
+        {
           path: 'menu',
           element: <Outlet />,
           children: [
@@ -93,7 +163,7 @@ export default function Router() {
             { path: '', element: <Favicons /> },
             { path: ':id', element: <Favicon /> },
             { path: ':id/edit', element: <AddFavicons editing /> },
-            { path: 'add', element: <AddServices /> }
+            { path: 'add', element: <AddFavicons /> }
           ]
         },
         {

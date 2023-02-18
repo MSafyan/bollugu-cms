@@ -4,7 +4,7 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import useLayouts from '../../../services/useLayoutHook';
 /*
 	Imports:
 		Material UI
@@ -17,7 +17,7 @@ import {
   InputLabel,
   TextField,
   Typography
-} from '@material-ui/core';
+} from '@mui/material';
 import { ThemeProvider } from '@material-ui/core/styles';
 /*
 	Imports:
@@ -29,11 +29,13 @@ import AlertSnackbar from 'src/components/misc/alerts/AlertSnackbar';
 import Dialog from 'src/components/misc/alerts/Dialog';
 import ServerError from 'src/components/misc/alerts/ServerError';
 import LoadingFormButton from 'src/components/misc/Buttons/LoadingFormButton';
-import { AddMenuItemSchema } from 'src/config/form-schemas';
-import { RouteServices } from 'src/config/routes';
-import serviceService from 'src/services/ServicesServiceClass';
+import { RouteWork } from 'src/config/routes';
+import serviceService from 'src/services/WorkServiceClass';
 import { acceptImageUpload } from '../../../config/settings';
 import { ContentStyle, FormTheme } from '../../../theme/form-pages';
+import { WorkItemSchema } from 'src/config/form-schemas';
+import { SelectColor } from './AboutForm';
+import { PRIMARY } from 'src/theme/palette';
 
 /*
 	Main Working
@@ -45,8 +47,8 @@ export default ({ menuItem, editing }) => {
   const [serverError, setServerError] = useState('');
   const [openDia, setOpenDia] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState(menuItem?.svg?.url);
-  const [imageID, setImageID] = useState(menuItem?.svg?.id);
+  const [imageUrl, setImageUrl] = useState(menuItem?.image?.url);
+  const [imageID, setImageID] = useState(menuItem?.image?.id);
   const [wrongFile, setWrongFile] = useState(false);
 
   const navigate = useNavigate();
@@ -56,17 +58,29 @@ export default ({ menuItem, editing }) => {
 	*/
   const formik = useFormik({
     initialValues: {
-      title: menuItem?.title ?? ''
+      title: menuItem?.title ?? '',
+      layout: menuItem?.layout ?? '',
+      metaDescription: menuItem?.metaDescription ?? '',
+      background: menuItem?.background?.id ?? '',
+      layout: menuItem?.layout?.id ?? ''
     },
-    validationSchema: AddMenuItemSchema,
+    validationSchema: WorkItemSchema,
     onSubmit: (_values, { setFieldError }) => {
       setSubmitting(true);
       addData();
     }
   });
 
-  const { values, errors, touched, isSubmitting, handleSubmit, getFieldProps, setSubmitting } =
-    formik;
+  const {
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    handleSubmit,
+    getFieldProps,
+    setSubmitting,
+    setFieldValue
+  } = formik;
 
   /*
 		Handlers
@@ -77,7 +91,7 @@ export default ({ menuItem, editing }) => {
 
     const data = {
       ...values,
-      svg: imageID
+      image: imageID
     };
 
     FunctionToCall(data, menuItem?.id)
@@ -93,7 +107,7 @@ export default ({ menuItem, editing }) => {
 
   const handleClose = () => {
     setOpenDia(false);
-    navigate(RouteServices);
+    navigate(RouteWork);
   };
 
   const handleImageChange = () => {
@@ -130,12 +144,12 @@ export default ({ menuItem, editing }) => {
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Typography variant="h6" gutterBottom>
-          Service Details
+          Background Details
         </Typography>
 
         <ContentStyle>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} md={6}>
+            <Grid item sm={12} md={6}>
               <ThemeProvider theme={FormTheme}>
                 <InputLabel>Title</InputLabel>
               </ThemeProvider>
@@ -147,6 +161,30 @@ export default ({ menuItem, editing }) => {
                 helperText={touched.title && errors.title}
               />
             </Grid>
+            <Grid item sm={12} md={6}>
+              <ThemeProvider theme={FormTheme}>
+                <InputLabel>Meta Description</InputLabel>
+              </ThemeProvider>
+              <TextField
+                multiline
+                rows={4}
+                fullWidth
+                autoComplete="metaDescription"
+                {...getFieldProps('metaDescription')}
+                error={Boolean(touched.metaDescription && errors.metaDescription)}
+                helperText={touched.metaDescription && errors.metaDescription}
+              />
+            </Grid>
+            <Grid item sm={12} md={6}>
+              <SelectColor
+                getFieldProps={getFieldProps}
+                fieldName="background"
+                label="Backgroud"
+                touched={touched}
+                errors={errors}
+              />
+            </Grid>
+
             <Grid item xs={12} sm={6} md={6}>
               <input
                 disabled={values.title.length < 2}
@@ -178,6 +216,15 @@ export default ({ menuItem, editing }) => {
                 ))}
             </Grid>
           </Grid>
+          <SelectTemplateLayout
+            getFieldProps={getFieldProps}
+            fieldName="layout"
+            label="Template"
+            touched={touched}
+            errors={errors}
+            setFieldValue={setFieldValue}
+            values={values}
+          />
         </ContentStyle>
 
         <ContentStyle>
@@ -185,7 +232,7 @@ export default ({ menuItem, editing }) => {
         </ContentStyle>
 
         <Dialog buttonText={'Close'} openDialog={openDia} handleButton={handleClose}>
-          {editing ? 'Service updated' : `Service is added`}
+          {editing ? 'Work updated' : `Work is added`}
         </Dialog>
         <AlertSnackbar severity="warning" open={wrongFile}>
           File type not allowed
@@ -199,5 +246,56 @@ export default ({ menuItem, editing }) => {
         </ServerError>
       </Form>
     </FormikProvider>
+  );
+};
+
+export const SelectTemplateLayout = ({
+  values,
+  fieldName,
+  label,
+  getFieldProps,
+  touched,
+  errors,
+  setFieldValue
+}) => {
+  const { layouts } = useLayouts();
+  return (
+    <Box
+      sx={{
+        mt: 2
+      }}
+    >
+      <ThemeProvider theme={FormTheme}>
+        <InputLabel>{label}</InputLabel>
+      </ThemeProvider>
+      <Grid container spacing={3}>
+        {layouts.map((_, index) => {
+          return (
+            <Grid item xs={4} sm={3} md={2} key={index}>
+              <Box
+                {...getFieldProps(fieldName)}
+                onClick={() => {
+                  setFieldValue(fieldName, _.id);
+                }}
+                sx={{
+                  border: '1px solid',
+                  borderColor: 'grey.500',
+                  borderRadius: '5px',
+                  padding: 1,
+                  cursor: 'pointer',
+                  ...(values[fieldName] === _.id && {
+                    backgroundColor: PRIMARY.main
+                  })
+                }}
+                error={Boolean(touched[fieldName] && errors[fieldName])}
+                helperText={touched[fieldName] && errors[fieldName]}
+              >
+                <img src={_.image?.url} alt="1" />
+              </Box>
+            </Grid>
+          );
+        })}
+      </Grid>
+    </Box>
   );
 };

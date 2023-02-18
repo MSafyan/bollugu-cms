@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import CenterLoading from 'src/components/misc/CenterLoading';
-import serviceService from 'src/services/ServicesServiceClass';
+import serviceService from 'src/services/SitemapXmlServiceClass';
 import userService from 'src/services/UserService';
 import Page from '../../components/Page';
 import ItemProfile from './profile/ItemProfile';

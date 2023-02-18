@@ -11,13 +11,18 @@ import {
 } from 'src/config/icons';
 
 import {
+  RouteAbout,
   RouteBackgrouns,
   RouteFavicons,
+  RouteHomeFooter,
+  RoutehomeSectionsPage,
+  RouteHomeTopPage,
   RouteMenu,
   RouteOrders,
   RouteRobots,
   RouteServices,
-  RouteSitemap
+  RouteSitemap,
+  RouteWork
 } from 'src/config/routes';
 
 const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
@@ -26,23 +31,23 @@ export const sidebarConfig = {
   admin: [
     {
       title: 'HOME TOP PAGE',
-      path: RouteMenu,
-      icon: getIcon(MenuIcon)
+      path: RoutehomeSectionsPage,
+      icon: getIcon(RoutehomeSectionsPage)
     },
     {
       title: 'HOME SECTION PAGES',
-      path: RouteOrders,
-      icon: getIcon(OrdersIcon)
+      path: RouteHomeTopPage,
+      icon: getIcon(RouteHomeTopPage)
     },
     {
       title: 'HOME FOOTER',
-      path: RouteOrders,
-      icon: getIcon(OrdersIcon)
+      path: RouteHomeFooter,
+      icon: getIcon(RouteHomeFooter)
     },
     {
       title: 'ABOUT',
-      path: RouteOrders,
-      icon: getIcon(OrdersIcon)
+      path: RouteAbout,
+      icon: getIcon(RouteAbout)
     },
     {
       title: 'SERVICES',
@@ -51,8 +56,8 @@ export const sidebarConfig = {
     },
     {
       title: 'WORKS',
-      path: RouteOrders,
-      icon: getIcon(OrdersIcon)
+      path: RouteWork,
+      icon: getIcon(RouteWork)
     },
     {
       title: 'BACKGROUNDS',

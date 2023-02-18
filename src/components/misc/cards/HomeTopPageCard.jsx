@@ -5,7 +5,7 @@ import palette from 'src/theme/palette';
 import { FoodPicture } from './FoodPicture';
 
 export default ({ item }) => {
-  const { title, file, to } = item;
+  const { width, height, file, to } = item;
 
   const [mouse, setMouse] = useState(false);
 
@@ -22,7 +22,7 @@ export default ({ item }) => {
 
         <Stack spacing={1} sx={{ p: 3 }}>
           <Typography variant="h5" noWrap>
-            {title ?? 'Food Name Here'}
+            {width} x {height}
           </Typography>
         </Stack>
       </Card>

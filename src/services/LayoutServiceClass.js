@@ -2,7 +2,7 @@ import qs from 'qs';
 import GenericService from './GenericService';
 import otherService from './OtherServiceClass';
 
-const modelName = 'robotstxts';
+const title = 'layouts';
 
 class MenuService extends GenericService {
   constructor() {
@@ -13,18 +13,18 @@ class MenuService extends GenericService {
   extractData(data) {
     const { id, attributes } = data;
 
-    const { file: file_obj } = attributes;
+    const { image: file_obj } = attributes;
 
-    let file;
+    let image;
     if (file_obj) {
       const { data: file_data } = file_obj;
-      if (file_data) file = otherService.extractFile(file_data);
+      if (file_data) image = otherService.extractFile(file_data);
     }
 
     return {
       id,
       ...attributes,
-      file
+      image
     };
   }
 
@@ -36,53 +36,22 @@ class MenuService extends GenericService {
           pageSize: 1000
         }
       });
-      this.get(`${modelName}?${query}`)
+      this.get(`${title}?${query}`)
 
         .then((response) => {
-          console.log(modelName, this.getService(response));
+          console.log('Service', this.getService(response));
           resolve(this.getService(response));
         })
         .catch((err) => reject(err));
     });
-
-  getOne = (id) =>
-    new Promise((resolve, reject) => {
-      const query = qs.stringify({
-        populate: '*'
-      });
-      this.get(`${modelName}/${id}?${query}`)
-
-        .then((response) => {
-          console.log(modelName, this.extractData(response.data));
-          resolve(this.extractData(response.data));
-        })
-        .catch((err) => reject(err));
-    });
-
-  add = (data) =>
-    Promise.resolve(
-      this.post(modelName, {
-        data
-      })
-    );
-
-  update = (data, id) =>
-    Promise.resolve(
-      this.put(`${modelName}/${id}`, {
-        data
-      })
-    );
-
   getService(response) {
     const { data } = response;
     console.log(
-      'Data',
+      'layout',
       data.map((noti) => this.extractData(noti))
     );
     return data.map((noti) => this.extractData(noti));
   }
-
-  remove = (ID) => this.delete(`${modelName}/${ID}`);
 }
 
 const menuService = new MenuService();

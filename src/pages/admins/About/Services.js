@@ -7,13 +7,13 @@ import { Children, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ServerError from 'src/components/misc/alerts/ServerError';
 import FloatingAdd from 'src/components/misc/Buttons/FloatingAdd';
-import ItemCard from 'src/components/misc/cards/robotstxtCard';
+import ItemCard from 'src/components/misc/cards/AboutCard';
 import CenterLoading from 'src/components/misc/CenterLoading';
 import ListPageTitle from 'src/components/misc/ListPageTitle';
-import { DefaultFood } from 'src/config/settings';
-import robotstxtService from 'src/services/RobotsTxtServiceClass';
+import serviceService from 'src/services/AboutServiceClass';
 import Page from '../../../components/Page';
 import userService from 'src/services/UserService';
+import { Typography } from '@mui/material';
 
 /*
   Main Working
@@ -38,7 +38,7 @@ export default ({}) => {
     setLoading(true);
 
     const user = userService.getLoggedInUser();
-    robotstxtService
+    serviceService
       .getAll()
       .then((response) => {
         setmenuItems(response);
@@ -51,7 +51,7 @@ export default ({}) => {
         setLoading(false);
       });
   };
-
+  const title = 'About';
   /*
     Use Effect Hooks.
   */
@@ -60,7 +60,13 @@ export default ({}) => {
   /*
     Main Design
   */
-  const title = 'RobotsTxts';
+
+  const aboutItemList = [
+    { name: 'background', type: 'background' },
+    { name: 'overview', type: 'overview' },
+    { name: 'map', type: 'map' },
+    { name: 'description', type: 'description' }
+  ];
   return (
     <Page title={title}>
       <Container>
@@ -73,16 +79,52 @@ export default ({}) => {
             <Grid container spacing={3} alignItems="stretch">
               {Children.toArray(
                 menuItems.map((menuItem) => {
-                  const { id, title, file } = menuItem;
+                  const {
+                    id,
+                    phoneNumber,
+                    email,
+                    tagline,
+                    address,
+                    countryList,
+                    metaDescription,
+                    activeBackground,
+                    inactiveBackground
+                  } = menuItem;
                   let item = {
-                    title,
-                    file: file?.url || DefaultFood,
+                    phoneNumber,
+                    email,
+                    tagline,
+                    address,
+                    countryList,
+                    metaDescription,
+                    activeBackground,
+                    inactiveBackground,
                     to: `./${id}`
                   };
                   return (
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                      <ItemCard item={{ ...item, title: 'RobotsText' }} />
-                    </Grid>
+                    <>
+                      {aboutItemList.map((_) => {
+                        return (
+                          <Grid
+                            item
+                            xs={12}
+                            sx={{
+                              mt: 3
+                            }}
+                          >
+                            <Typography
+                              component="h1"
+                              variant="h3"
+                              align="center"
+                              color="textPrimary"
+                            >
+                              {_.name}
+                            </Typography>
+                            <ItemCard item={item} type={_.type} />
+                          </Grid>
+                        );
+                      })}
+                    </>
                   );
                 })
               )}

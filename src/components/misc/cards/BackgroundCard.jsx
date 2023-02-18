@@ -5,7 +5,7 @@ import palette from 'src/theme/palette';
 import { FoodPicture } from './FoodPicture';
 
 export default ({ item }) => {
-  const { title, file, to } = item;
+  const { color, to } = item;
 
   const [mouse, setMouse] = useState(false);
 
@@ -16,13 +16,11 @@ export default ({ item }) => {
         onMouseEnter={() => setMouse(true)}
         onMouseLeave={() => setMouse(false)}
       >
-        <Box sx={{ pt: '100%', position: 'relative' }}>
-          <FoodPicture alt={file} src={file} />
-        </Box>
+        <Box sx={{ pt: '100%', position: 'relative', backgroundColor: color }}></Box>
 
         <Stack spacing={1} sx={{ p: 3 }}>
           <Typography variant="h5" noWrap>
-            {title ?? 'Food Name Here'}
+            {color}
           </Typography>
         </Stack>
       </Card>

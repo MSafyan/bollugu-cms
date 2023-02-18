@@ -1,6 +1,11 @@
 export const RouteLandingPage = '/';
 export const RouteLogin = '/login';
 export const RouteOrders = '/orders';
+export const RoutehomeSectionsPage = '/homeSectionsPage';
+export const RouteHomeTopPage = '/homeTopPage';
+export const RouteHomeFooter = '/homeFooter';
+export const RouteAbout = '/about';
+export const RouteWork = '/work';
 export const RouteServices = '/services';
 export const RouteBackgrouns = '/backgrounds';
 export const RouteFavicons = '/favicons';

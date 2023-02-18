@@ -28,7 +28,7 @@ const GREY = {
   500_80: alpha('#919EAB', 0.8)
 };
 
-const PRIMARY = {
+export const PRIMARY = {
   lighter: '#C8FACD',
   light: '#5BE584',
   lightest: '#FBD5C3',
@@ -101,7 +101,13 @@ const palette = {
   gradients: GRADIENTS,
   divider: GREY[500_24],
   text: { primary: GREY[800], secondary: GREY[600], disabled: GREY[500] },
-  background: { paper: '#fff', default: '#fff', neutral: GREY[200], locked: ERROR.lighter, success: SUCCESS.dialog },
+  background: {
+    paper: '#fff',
+    default: '#fff',
+    neutral: GREY[200],
+    locked: ERROR.lighter,
+    success: SUCCESS.dialog
+  },
   action: {
     active: GREY[600],
     hover: GREY[500_8],

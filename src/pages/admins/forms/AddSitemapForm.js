@@ -164,7 +164,7 @@ export default ({ menuItem, editing }) => {
         </ContentStyle>
 
         <Dialog buttonText={'Close'} openDialog={openDia} handleButton={handleClose}>
-          {editing ? 'Menu item updated' : `Menu item is added`}
+          {editing ? 'Sitemap updated' : `Sitemap is added`}
         </Dialog>
         <AlertSnackbar severity="warning" open={wrongFile}>
           File type not allowed

@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+const digitsOnly = (value) => /^\d+$/.test(value);
 
 export const ResetSchema = (password) =>
   Yup.object().shape({
@@ -22,6 +23,32 @@ export const LoginSchema = Yup.object().shape({
 
 export const AddMenuItemSchema = Yup.object().shape({
   title: Yup.string().required().label('Title')
+});
+
+export const BackgroundItemSchema = Yup.object().shape({
+  color: Yup.string().required().label('Color')
+});
+
+export const FaviconItemSchema = Yup.object().shape({
+  width: Yup.string().required().label('Width'),
+  height: Yup.string().required().label('Height')
+});
+export const WorkItemSchema = Yup.object().shape({
+  title: Yup.string().required().label('Title'),
+  background: Yup.string().required().label('Background'),
+  layout: Yup.string().required().label('layout'),
+  metaDescription: Yup.string().required().label('Meta Description')
+});
+
+export const AboutSchema = Yup.object().shape({
+  phoneNumber: Yup.string().test('Digits only', 'The field should have digits only', digitsOnly),
+  tagline: Yup.string().required().label('Tagline'),
+  address: Yup.string().required().label('Address'),
+  email: Yup.string().required('Email is required').email('Valid Email is required')
+});
+export const HomeFooterSchema = Yup.object().shape({
+  phoneNumber: Yup.string().test('Digits only', 'The field should have digits only', digitsOnly),
+  email: Yup.string().required('Email is required').email('Valid Email is required')
 });
 
 export const SettingsSchema = Yup.object().shape({

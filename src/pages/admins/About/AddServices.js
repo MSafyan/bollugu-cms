@@ -13,12 +13,12 @@ import { Container } from '@material-ui/core';
 		Our Imports
 		Components and Settings
 */
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import CenterLoading from 'src/components/misc/CenterLoading';
 import ListPageTitle from 'src/components/misc/ListPageTitle';
 import Page from 'src/components/Page';
-import serviceService from 'src/services/BackgroudServiceClass';
-import AddServiceForm from '../forms/AddBackgroundForm';
+import serviceService from 'src/services/AboutServiceClass';
+import AddServiceForm from '../forms/AboutForm';
 
 /*
 	Main Working
@@ -29,6 +29,8 @@ export default ({ editing }) => {
 	*/
   const [item, setItem] = useState(null);
   const id = useParams().id;
+  const search = useLocation().search;
+  const searchParams = new URLSearchParams(search);
 
   /*
 	  Handlers, Functions
@@ -58,14 +60,14 @@ export default ({ editing }) => {
 	  Main Design
 	*/
   return (
-    <Page title={`${editing ? 'Edit' : 'Add'} Background`}>
+    <Page title={`${editing ? 'Edit' : 'Add'} About`}>
       <Container maxWidth="xl">
         {!item && id && editing ? (
           <CenterLoading />
         ) : (
           <>
-            <ListPageTitle>{editing ? 'Edit' : 'Add'} Background</ListPageTitle>
-            <AddServiceForm menuItem={item} editing={editing} />
+            <ListPageTitle>{editing ? 'Edit' : 'Add'} About</ListPageTitle>
+            <AddServiceForm menuItem={item} editing={editing} type={searchParams.get('type')} />
           </>
         )}
       </Container>

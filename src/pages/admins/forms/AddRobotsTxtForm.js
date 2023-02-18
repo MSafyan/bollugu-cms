@@ -30,8 +30,8 @@ export default ({ menuItem, editing }) => {
   const [serverError, setServerError] = useState('');
   const [openDia, setOpenDia] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState(menuItem?.svg?.url);
-  const [imageID, setImageID] = useState(menuItem?.svg?.id);
+  const [imageUrl, setImageUrl] = useState(menuItem?.file?.url);
+  const [imageID, setImageID] = useState(menuItem?.file?.id);
   const [wrongFile, setWrongFile] = useState(false);
 
   const navigate = useNavigate();
@@ -54,8 +54,6 @@ export default ({ menuItem, editing }) => {
 		Handlers
 	*/
   const addData = () => {
-    debugger;
-
     let FunctionToCall = robotsTxtService.add;
     if (editing) FunctionToCall = robotsTxtService.update;
 

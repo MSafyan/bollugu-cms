@@ -2,10 +2,9 @@ import { Box, Card, Link, Stack, Typography } from '@material-ui/core';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import palette from 'src/theme/palette';
-import { FoodPicture } from './FoodPicture';
 
 export default ({ item }) => {
-  const { title, file, to } = item;
+  const { phoneNumber, email, to } = item;
 
   const [mouse, setMouse] = useState(false);
 
@@ -16,13 +15,12 @@ export default ({ item }) => {
         onMouseEnter={() => setMouse(true)}
         onMouseLeave={() => setMouse(false)}
       >
-        <Box sx={{ pt: '100%', position: 'relative' }}>
-          <FoodPicture alt={file} src={file} />
-        </Box>
-
         <Stack spacing={1} sx={{ p: 3 }}>
           <Typography variant="h5" noWrap>
-            {title ?? 'Food Name Here'}
+            {`Phone Number: ${phoneNumber}`}
+          </Typography>
+          <Typography variant="h5" noWrap>
+            {`Email: ${email}`}
           </Typography>
         </Stack>
       </Card>

@@ -7,11 +7,11 @@ import { Children, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ServerError from 'src/components/misc/alerts/ServerError';
 import FloatingAdd from 'src/components/misc/Buttons/FloatingAdd';
-import ItemCard from 'src/components/misc/cards/ItemCard';
+import ItemCard from 'src/components/misc/cards/BackgroundCard';
 import CenterLoading from 'src/components/misc/CenterLoading';
 import ListPageTitle from 'src/components/misc/ListPageTitle';
-import { DefaultFood } from 'src/config/settings';
-import serviceService from 'src/services/ServicesServiceClass';
+import { DefaultColor, DefaultFood } from 'src/config/settings';
+import serviceService from 'src/services/BackgroudServiceClass';
 import Page from '../../../components/Page';
 import userService from 'src/services/UserService';
 
@@ -61,7 +61,7 @@ export default ({}) => {
     Main Design
   */
 
-  const title = 'Favicon';
+  const title = 'Background';
   return (
     <Page title={title}>
       <Container>
@@ -74,12 +74,10 @@ export default ({}) => {
             <Grid container spacing={3} alignItems="stretch">
               {Children.toArray(
                 menuItems.map((menuItem) => {
-                  const { id, title, svg } = menuItem;
-                  debugger;
+                  const { id, color } = menuItem;
 
                   let item = {
-                    title,
-                    svg: svg?.url || DefaultFood,
+                    color: color || DefaultColor,
                     to: `./${id}`
                   };
                   return (

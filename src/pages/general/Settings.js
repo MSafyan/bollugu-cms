@@ -12,35 +12,28 @@ import Form from './forms/SettingsForm';
     Main Working
 */
 export default () => {
-    const [loggedInUser, setLoggedInUser] = useState(null);
-    const navigate = useNavigate();
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const navigate = useNavigate();
 
-    function getData() {
-        userService
-            .getLoggedInUser()
-            .then((user) => {
-                console.log("User", user);
-                setLoggedInUser(user);
-            })
-            .catch(() => {
-                navigate('/404');
-            });
-    }
+  function getData() {
+    userService
+      .getLoggedInUser()
+      .then((user) => {
+        console.log('User', user);
+        setLoggedInUser(user);
+      })
+      .catch(() => {
+        navigate('/404');
+      });
+  }
 
+  useEffect(() => {
+    getData();
+  }, []);
 
-    useEffect(() => {
-
-        getData();
-    }, []);
-
-    return (
-        <Page title='Settings'>
-            <Container maxWidth="xl">
-                {loggedInUser &&
-                    <Form user={loggedInUser} />
-                }
-            </Container>
-        </Page>
-    );
+  return (
+    <Page title="Settings">
+      <Container maxWidth="xl">{loggedInUser && <Form user={loggedInUser} />}</Container>
+    </Page>
+  );
 };
-

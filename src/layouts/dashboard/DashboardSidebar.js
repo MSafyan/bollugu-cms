@@ -91,7 +91,6 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           {renderContent}
         </Drawer>
       </MHidden>
-
       <MHidden width="lgDown">
         <Drawer
           open

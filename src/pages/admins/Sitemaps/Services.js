@@ -74,8 +74,6 @@ export default ({}) => {
               {Children.toArray(
                 menuItems.map((menuItem) => {
                   const { id, title, svg } = menuItem;
-                  debugger;
-
                   let item = {
                     title,
                     svg: svg?.url || DefaultFood,

@@ -2,6 +2,8 @@ import qs from 'qs';
 import GenericService from './GenericService';
 import otherService from './OtherServiceClass';
 
+const title = 'favicons';
+
 class MenuService extends GenericService {
   constructor() {
     super();
@@ -11,33 +13,30 @@ class MenuService extends GenericService {
   extractData(data) {
     const { id, attributes } = data;
 
-    const { svg: file_obj } = attributes;
+    const { file: file_obj } = attributes;
 
-    let svg;
+    let file;
     if (file_obj) {
       const { data: file_data } = file_obj;
-      if (file_data) svg = otherService.extractFile(file_data);
+      if (file_data) file = otherService.extractFile(file_data);
     }
 
     return {
       id,
       ...attributes,
-      svg
+      file
     };
   }
 
-  getAll = (chef) =>
+  getAll = () =>
     new Promise((resolve, reject) => {
       const query = qs.stringify({
-        filters: {
-          chef
-        },
         populate: '*',
         pagniation: {
           pageSize: 1000
         }
       });
-      this.get(`services?${query}`)
+      this.get(`${title}?${query}`)
 
         .then((response) => {
           console.log('Service', this.getService(response));
@@ -51,7 +50,7 @@ class MenuService extends GenericService {
       const query = qs.stringify({
         populate: '*'
       });
-      this.get(`services/${id}?${query}`)
+      this.get(`${title}/${id}?${query}`)
 
         .then((response) => {
           console.log('Menu Item', this.extractData(response.data));
@@ -62,14 +61,14 @@ class MenuService extends GenericService {
 
   add = (data) =>
     Promise.resolve(
-      this.post(`services`, {
+      this.post(`${title}`, {
         data
       })
     );
 
   update = (data, id) =>
     Promise.resolve(
-      this.put(`services/${id}`, {
+      this.put(`${title}/${id}`, {
         data
       })
     );
@@ -83,7 +82,7 @@ class MenuService extends GenericService {
     return data.map((noti) => this.extractData(noti));
   }
 
-  remove = (ID) => this.delete(`Menu/${ID}`);
+  remove = (ID) => this.delete(`${title}/${ID}`);
 }
 
 const menuService = new MenuService();

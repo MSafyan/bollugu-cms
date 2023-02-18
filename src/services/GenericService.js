@@ -8,10 +8,8 @@ axios.defaults.headers['Content-Type'] = 'application/json; charset=utf-8' || 'a
 class GenericService {
   tokenUpdate = () => {
     const token = localStorage.getItem('token');
-    if (token)
-      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-    else
-      delete axios.defaults.headers.common.Authorization;
+    if (token) axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+    else delete axios.defaults.headers.common.Authorization;
   };
 
   get = (url, data) =>
@@ -43,11 +41,13 @@ class GenericService {
     new Promise((resolve, reject) => {
       axios
         .post(url, JSON.stringify(data), {
-          transformRequest: [function (data_, headers) {
-            delete headers.Authorization;
-            delete headers.common.Authorization;
-            return data_;
-          }],
+          transformRequest: [
+            function (data_, headers) {
+              delete headers.Authorization;
+              delete headers.common.Authorization;
+              return data_;
+            }
+          ]
         })
         .then((res) => {
           resolve(res.data);
@@ -58,6 +58,13 @@ class GenericService {
         });
     });
 
+  extractRelation(obj) {
+    const { id, attributes } = obj?.data || {};
+    return {
+      id,
+      ...attributes
+    };
+  }
 
   delete = (url) =>
     new Promise((resolve, reject) => {
@@ -85,28 +92,29 @@ class GenericService {
 
   upload(file, name, onUploadProgress) {
     let formData = new FormData();
-    let extension = file.name.split(".");
+    let extension = file.name.split('.');
     extension = extension[extension.length - 1];
 
     if (file.size > maxUploadFileSize) {
-      return Promise.reject({ fileUploadError: true, msg: `Maximum ${maxUploadFileSize / 1024 / 1024} MB file allowed` });
+      return Promise.reject({
+        fileUploadError: true,
+        msg: `Maximum ${maxUploadFileSize / 1024 / 1024} MB file allowed`
+      });
     }
 
     if (!allowedExtensions.includes(extension)) {
       return Promise.reject({ fileUploadError: true, msg: 'Extension not allowed' });
     }
 
-    formData.append("files", renameFile(file, `${name}.${extension}`));
+    formData.append('files', renameFile(file, `${name}.${extension}`));
 
-    return axios.post("upload", formData, {
+    return axios.post('upload', formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data'
       },
-      onUploadProgress,
+      onUploadProgress
     });
   }
-
-
 
   download(url, name) {
     const link = document.createElement('a');

@@ -17,12 +17,13 @@ import { useParams } from 'react-router-dom';
 import CenterLoading from 'src/components/misc/CenterLoading';
 import ListPageTitle from 'src/components/misc/ListPageTitle';
 import Page from 'src/components/Page';
-import serviceService from 'src/services/BackgroudServiceClass';
-import AddServiceForm from '../forms/AddBackgroundForm';
+import serviceService from 'src/services/WorkServiceClass';
+import AddServiceForm from '../forms/WorkForm';
 
 /*
 	Main Working
 */
+const pagetitle = 'Work';
 export default ({ editing }) => {
   /*
 	  States, Params, Navigation, Query, Variables.
@@ -58,13 +59,15 @@ export default ({ editing }) => {
 	  Main Design
 	*/
   return (
-    <Page title={`${editing ? 'Edit' : 'Add'} Background`}>
+    <Page title={`${editing ? 'Edit' : 'Add'} ${pagetitle}`}>
       <Container maxWidth="xl">
         {!item && id && editing ? (
           <CenterLoading />
         ) : (
           <>
-            <ListPageTitle>{editing ? 'Edit' : 'Add'} Background</ListPageTitle>
+            <ListPageTitle>
+              {editing ? 'Edit' : 'Add'} {pagetitle}
+            </ListPageTitle>
             <AddServiceForm menuItem={item} editing={editing} />
           </>
         )}

@@ -34,6 +34,8 @@ export const allowedExtensions = [
   'txt'
 ];
 
+export const DefaultColor = '#000000';
+
 export const acceptImageUpload = 'image/png, image/jpg, image/jpeg';
 export const acceptFileUpload =
   'image/png, image/jpg, image/jpeg, audio/mp3, application/pdf, application/zip, application/doc, application/docx, application/ppt, application/pptx, application/txt';

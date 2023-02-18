@@ -5,20 +5,13 @@ import { Form, FormikProvider, useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { ColorPicker, useColor } from 'react-color-palette';
+import 'react-color-palette/lib/css/styles.css';
 /*
 	Imports:
 		Material UI
 */
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Grid,
-  InputLabel,
-  TextField,
-  Typography
-} from '@material-ui/core';
-import { ThemeProvider } from '@material-ui/core/styles';
+import { Grid, Typography } from '@material-ui/core';
 /*
 	Imports:
 		Our Imports
@@ -29,11 +22,10 @@ import AlertSnackbar from 'src/components/misc/alerts/AlertSnackbar';
 import Dialog from 'src/components/misc/alerts/Dialog';
 import ServerError from 'src/components/misc/alerts/ServerError';
 import LoadingFormButton from 'src/components/misc/Buttons/LoadingFormButton';
-import { AddMenuItemSchema } from 'src/config/form-schemas';
-import { RouteServices } from 'src/config/routes';
-import serviceService from 'src/services/ServicesServiceClass';
-import { acceptFileUpload } from '../../../config/settings';
-import { ContentStyle, FormTheme } from '../../../theme/form-pages';
+import { BackgroundItemSchema } from 'src/config/form-schemas';
+import { RouteBackgrouns, RouteFavicons } from 'src/config/routes';
+import serviceService from 'src/services/BackgroudServiceClass';
+import { ContentStyle } from '../../../theme/form-pages';
 
 /*
 	Main Working
@@ -45,8 +37,8 @@ export default ({ menuItem, editing }) => {
   const [serverError, setServerError] = useState('');
   const [openDia, setOpenDia] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState(menuItem?.svg?.url);
-  const [imageID, setImageID] = useState(menuItem?.svg?.id);
+  const [imageUrl, setImageUrl] = useState(menuItem?.file?.url);
+  const [imageID, setImageID] = useState(menuItem?.file?.id);
   const [wrongFile, setWrongFile] = useState(false);
 
   const navigate = useNavigate();
@@ -56,17 +48,16 @@ export default ({ menuItem, editing }) => {
 	*/
   const formik = useFormik({
     initialValues: {
-      title: menuItem?.title ?? ''
+      color: menuItem?.color ?? ''
     },
-    validationSchema: AddMenuItemSchema,
+    validationSchema: BackgroundItemSchema,
     onSubmit: (_values, { setFieldError }) => {
       setSubmitting(true);
       addData();
     }
   });
 
-  const { values, errors, touched, isSubmitting, handleSubmit, getFieldProps, setSubmitting } =
-    formik;
+  const { values, errors, isSubmitting, handleSubmit, setSubmitting, setFieldValue } = formik;
 
   /*
 		Handlers
@@ -77,7 +68,7 @@ export default ({ menuItem, editing }) => {
 
     const data = {
       ...values,
-      svg: imageID
+      file: imageID
     };
 
     FunctionToCall(data, menuItem?.id)
@@ -93,7 +84,7 @@ export default ({ menuItem, editing }) => {
 
   const handleClose = () => {
     setOpenDia(false);
-    navigate(RouteServices);
+    navigate(RouteBackgrouns);
   };
 
   const handleImageChange = () => {
@@ -122,6 +113,7 @@ export default ({ menuItem, editing }) => {
 		Use Effect Hooks.
 	*/
   useEffect(handleImageChange, [selectedImage]);
+  const [color, setColor] = useColor('hex', '#121212');
 
   /*
 		Main Design
@@ -130,52 +122,24 @@ export default ({ menuItem, editing }) => {
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Typography variant="h6" gutterBottom>
-          Service Details
+          Background Details
         </Typography>
 
         <ContentStyle>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6} md={6}>
-              <ThemeProvider theme={FormTheme}>
-                <InputLabel>Title</InputLabel>
-              </ThemeProvider>
-              <TextField
-                fullWidth
-                autoComplete="title"
-                {...getFieldProps('title')}
-                error={Boolean(touched.title && errors.title)}
-                helperText={touched.title && errors.title}
+              <ColorPicker
+                width={456}
+                height={228}
+                color={color}
+                onChange={(e) => {
+                  setFieldValue('color', e.hex);
+                  setColor(e);
+                }}
+                hideHSV
+                dark
               />
-            </Grid>
-            <Grid item xs={12} sm={6} md={6}>
-              <input
-                disabled={values.title.length < 2}
-                accept={acceptFileUpload}
-                type="file"
-                id="select-image"
-                style={{ display: 'none' }}
-                onChange={(e) => setSelectedImage(e.target.files[0])}
-              />
-              <label htmlFor="select-image">
-                <Button
-                  disabled={values.title.length < 2}
-                  variant="outlined"
-                  color="primary"
-                  component="span"
-                >
-                  Upload Image
-                </Button>
-              </label>
-              {imageUrl &&
-                (imageUrl ? (
-                  <Box mt={2} textAlign="center">
-                    <img src={imageUrl} alt={values.title} height="100px" />
-                  </Box>
-                ) : (
-                  <Box mt={2} textAlign="center">
-                    <CircularProgress color="primary" />
-                  </Box>
-                ))}
+              ;
             </Grid>
           </Grid>
         </ContentStyle>
@@ -185,14 +149,14 @@ export default ({ menuItem, editing }) => {
         </ContentStyle>
 
         <Dialog buttonText={'Close'} openDialog={openDia} handleButton={handleClose}>
-          {editing ? 'Menu item updated' : `Menu item is added`}
+          {editing ? 'Background updated' : `Background is added`}
         </Dialog>
         <AlertSnackbar severity="warning" open={wrongFile}>
           File type not allowed
         </AlertSnackbar>
 
         <LoadingFormButton loading={isSubmitting || (selectedImage && !imageUrl)}>
-          {editing ? 'Save' : 'Add'}
+          {editing ? 'Saved' : 'Add'}
         </LoadingFormButton>
         <ServerError open={serverError || !!errors.availability}>
           {serverError ? serverError : errors.availability}
