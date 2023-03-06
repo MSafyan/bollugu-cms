@@ -4,7 +4,6 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useLayouts from '../../../services/useLayoutHook';
 /*
 	Imports:
 		Material UI
@@ -15,6 +14,8 @@ import {
   CircularProgress,
   Grid,
   InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography
 } from '@mui/material';
@@ -34,8 +35,8 @@ import serviceService from 'src/services/WorkServiceClass';
 import { acceptImageUpload } from '../../../config/settings';
 import { ContentStyle, FormTheme } from '../../../theme/form-pages';
 import { WorkItemSchema } from 'src/config/form-schemas';
+import { SelectImagePosition, SelectSection } from './Selects';
 import { SelectColor } from './AboutForm';
-import { PRIMARY } from 'src/theme/palette';
 
 /*
 	Main Working
@@ -47,8 +48,8 @@ export default ({ menuItem, editing }) => {
   const [serverError, setServerError] = useState('');
   const [openDia, setOpenDia] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState(menuItem?.image?.url);
-  const [imageID, setImageID] = useState(menuItem?.image?.id);
+  const [imageUrl, setImageUrl] = useState(menuItem?.image_url?.url);
+  const [imageID, setImageID] = useState(menuItem?.image_url?.id);
   const [wrongFile, setWrongFile] = useState(false);
 
   const navigate = useNavigate();
@@ -59,10 +60,11 @@ export default ({ menuItem, editing }) => {
   const formik = useFormik({
     initialValues: {
       title: menuItem?.title ?? '',
-      layout: menuItem?.layout ?? '',
-      metaDescription: menuItem?.metaDescription ?? '',
-      background: menuItem?.background?.id ?? '',
-      layout: menuItem?.layout?.id ?? ''
+      order: menuItem?.order ?? '',
+      image: menuItem?.image ?? '',
+      image_type: menuItem?.image_type ?? '',
+      section_title: menuItem?.section_title?.id ?? ''
+      // background: menuItem?.background.id ?? ''
     },
     validationSchema: WorkItemSchema,
     onSubmit: (_values, { setFieldError }) => {
@@ -91,7 +93,7 @@ export default ({ menuItem, editing }) => {
 
     const data = {
       ...values,
-      image: imageID
+      image_url: imageID
     };
 
     FunctionToCall(data, menuItem?.id)
@@ -161,25 +163,44 @@ export default ({ menuItem, editing }) => {
                 helperText={touched.title && errors.title}
               />
             </Grid>
+
             <Grid item sm={12} md={6}>
               <ThemeProvider theme={FormTheme}>
-                <InputLabel>Meta Description</InputLabel>
+                <InputLabel>Order</InputLabel>
               </ThemeProvider>
               <TextField
-                multiline
-                rows={4}
                 fullWidth
-                autoComplete="metaDescription"
-                {...getFieldProps('metaDescription')}
-                error={Boolean(touched.metaDescription && errors.metaDescription)}
-                helperText={touched.metaDescription && errors.metaDescription}
+                autoComplete="order"
+                {...getFieldProps('order')}
+                error={Boolean(touched.order && errors.order)}
+                helperText={touched.order && errors.order}
               />
             </Grid>
-            <Grid item sm={12} md={6}>
+
+            {/* <Grid item sm={12} md={6}>
               <SelectColor
                 getFieldProps={getFieldProps}
                 fieldName="background"
                 label="Backgroud"
+                touched={touched}
+                errors={errors}
+              />
+            </Grid> */}
+
+            <Grid item sm={6}>
+              <SelectImagePosition
+                getFieldProps={getFieldProps}
+                fieldName="image_type"
+                label="Image Type"
+                touched={touched}
+                errors={errors}
+              />
+            </Grid>
+            <Grid item sm={6}>
+              <SelectSection
+                getFieldProps={getFieldProps}
+                fieldName="section_title"
+                label="Section"
                 touched={touched}
                 errors={errors}
               />
@@ -216,15 +237,6 @@ export default ({ menuItem, editing }) => {
                 ))}
             </Grid>
           </Grid>
-          <SelectTemplateLayout
-            getFieldProps={getFieldProps}
-            fieldName="layout"
-            label="Template"
-            touched={touched}
-            errors={errors}
-            setFieldValue={setFieldValue}
-            values={values}
-          />
         </ContentStyle>
 
         <ContentStyle>
@@ -246,56 +258,5 @@ export default ({ menuItem, editing }) => {
         </ServerError>
       </Form>
     </FormikProvider>
-  );
-};
-
-export const SelectTemplateLayout = ({
-  values,
-  fieldName,
-  label,
-  getFieldProps,
-  touched,
-  errors,
-  setFieldValue
-}) => {
-  const { layouts } = useLayouts();
-  return (
-    <Box
-      sx={{
-        mt: 2
-      }}
-    >
-      <ThemeProvider theme={FormTheme}>
-        <InputLabel>{label}</InputLabel>
-      </ThemeProvider>
-      <Grid container spacing={3}>
-        {layouts.map((_, index) => {
-          return (
-            <Grid item xs={4} sm={3} md={2} key={index}>
-              <Box
-                {...getFieldProps(fieldName)}
-                onClick={() => {
-                  setFieldValue(fieldName, _.id);
-                }}
-                sx={{
-                  border: '1px solid',
-                  borderColor: 'grey.500',
-                  borderRadius: '5px',
-                  padding: 1,
-                  cursor: 'pointer',
-                  ...(values[fieldName] === _.id && {
-                    backgroundColor: PRIMARY.main
-                  })
-                }}
-                error={Boolean(touched[fieldName] && errors[fieldName])}
-                helperText={touched[fieldName] && errors[fieldName]}
-              >
-                <img src={_.image?.url} alt="1" />
-              </Box>
-            </Grid>
-          );
-        })}
-      </Grid>
-    </Box>
   );
 };

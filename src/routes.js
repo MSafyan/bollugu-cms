@@ -9,7 +9,8 @@ import AddHomeTops from './pages/admins/HomeTopPage/AddServices';
 import HomeTops from './pages/admins/HomeTopPage/Services';
 import HomeTop from './pages/general/HomeTopPage';
 
-import AddHomeSections from './pages/admins/HomeSectionsPage/AddServices';
+import AddHomeTemplate from './pages/admins/HomeSectionsPage/AddHomeTemplate';
+import AddHomeService from './pages/admins/HomeSectionsPage/AddHomeService';
 import HomeSections from './pages/admins/HomeSectionsPage/Services';
 import HomeSection from './pages/general/HomeSectionsPage';
 
@@ -75,17 +76,7 @@ export default function Router() {
       path: RouteLandingPage,
       element: <DashboardLayout />,
       children: [
-        { path: '', element: <MenuItems /> },
-        {
-          path: 'homeSectionsPage',
-          element: <Outlet />,
-          children: [
-            { path: '', element: <HomeSections /> },
-            { path: ':id', element: <HomeSection /> },
-            { path: ':id/edit', element: <AddHomeSections editing /> },
-            { path: 'add', element: <AddHomeSections /> }
-          ]
-        },
+        { path: '', element: <HomeTops /> },
         {
           path: 'homeTopPage',
           element: <Outlet />,
@@ -94,6 +85,17 @@ export default function Router() {
             { path: ':id', element: <HomeTop /> },
             { path: ':id/edit', element: <AddHomeTops editing /> },
             { path: 'add', element: <AddHomeTops /> }
+          ]
+        },
+        {
+          path: 'homeSectionsPage',
+          element: <Outlet />,
+          children: [
+            { path: '', element: <HomeSections /> },
+            { path: ':id/edit', element: <AddHomeService editing /> },
+            { path: 'add', element: <AddHomeService /> },
+            { path: 'template/:id/edit/:serviceId', element: <AddHomeTemplate editing /> },
+            { path: 'template/add/:serviceId', element: <AddHomeTemplate /> }
           ]
         },
         {

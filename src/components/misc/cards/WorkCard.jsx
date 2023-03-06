@@ -3,11 +3,9 @@ import { Grid } from '@mui/material';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { ColorBox } from 'src/pages/admins/forms/AboutForm';
-import palette from 'src/theme/palette';
-import { FoodPicture } from './FoodPicture';
 
 export default ({ item }) => {
-  const { title, image, background, layout, metaDescription, to } = item;
+  const { title, image, background, to } = item;
 
   const [mouse, setMouse] = useState(false);
 
@@ -33,16 +31,6 @@ export default ({ item }) => {
         <Grid item sm={6} md={3}>
           <Box sx={{ height: '200px', width: '200px' }}>
             <img alt={image} src={image} />
-          </Box>
-        </Grid>
-        <Grid item sm={6} md={3}>
-          <Typography variant="h5" noWrap>
-            {metaDescription}
-          </Typography>
-        </Grid>
-        <Grid item sm={6} md={3}>
-          <Box sx={{ height: '200px', width: '200px' }}>
-            <img alt={layout.image.url} src={layout.image.url} />
           </Box>
         </Grid>
 

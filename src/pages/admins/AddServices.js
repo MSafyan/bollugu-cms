@@ -13,12 +13,13 @@ import { Container } from '@material-ui/core';
 		Our Imports
 		Components and Settings
 */
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CenterLoading from 'src/components/misc/CenterLoading';
 import ListPageTitle from 'src/components/misc/ListPageTitle';
 import Page from 'src/components/Page';
 import serviceService from 'src/services/ServicesServiceClass';
 import AddServiceForm from './forms/AddServiceForm';
+import { RouteServices } from 'src/config/routes';
 
 /*
 	Main Working
@@ -30,6 +31,20 @@ export default ({ editing }) => {
   const [item, setItem] = useState(null);
   const id = useParams().id;
 
+  const navigate = useNavigate();
+
+  const handleRemove = () => {
+    if (id && editing) {
+      serviceService
+        .remove(id)
+        .then((data) => {
+          navigate(RouteServices);
+        })
+        .catch(() => {
+          console.error('Error in getting item', id);
+        });
+    }
+  };
   /*
 	  Handlers, Functions
 	*/
@@ -39,6 +54,7 @@ export default ({ editing }) => {
       serviceService
         .getOne(id)
         .then((data) => {
+          debugger;
           setItem(data);
         })
         .catch(() => {
@@ -64,7 +80,9 @@ export default ({ editing }) => {
           <CenterLoading />
         ) : (
           <>
-            <ListPageTitle>{editing ? 'Edit' : 'Add'} Service</ListPageTitle>
+            <ListPageTitle handleRemove={handleRemove} editing={editing}>
+              {editing ? 'Edit' : 'Add'} Service
+            </ListPageTitle>
             <AddServiceForm menuItem={item} editing={editing} />
           </>
         )}

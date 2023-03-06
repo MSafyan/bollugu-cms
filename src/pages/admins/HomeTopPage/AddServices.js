@@ -17,8 +17,8 @@ import { useParams } from 'react-router-dom';
 import CenterLoading from 'src/components/misc/CenterLoading';
 import ListPageTitle from 'src/components/misc/ListPageTitle';
 import Page from 'src/components/Page';
-import serviceService from 'src/services/FaviconServiceClass';
-import AddServiceForm from '../forms/AddFaviconForm';
+import serviceService from 'src/services/HomeTopServiceClass';
+import AddServiceForm from '../forms/HomeTopPageForm';
 
 /*
 	Main Working
@@ -57,14 +57,18 @@ export default ({ editing }) => {
   /*
 	  Main Design
 	*/
+
+  const title = 'Home Top';
   return (
-    <Page title={`${editing ? 'Edit' : 'Add'} Favicon`}>
+    <Page title={`${editing ? 'Edit' : 'Add'} ${title}`}>
       <Container maxWidth="xl">
         {!item && id && editing ? (
           <CenterLoading />
         ) : (
           <>
-            <ListPageTitle>{editing ? 'Edit' : 'Add'} Favicon</ListPageTitle>
+            <ListPageTitle>
+              {editing ? 'Edit' : 'Add'} {title}
+            </ListPageTitle>
             <AddServiceForm menuItem={item} editing={editing} />
           </>
         )}

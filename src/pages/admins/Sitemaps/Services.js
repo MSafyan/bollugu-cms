@@ -62,7 +62,7 @@ export default ({}) => {
   */
   const title = 'Sitemap';
   return (
-    <Page title={`{title}`}>
+    <Page title={`${title}`}>
       <Container>
         <ListPageTitle>{title}</ListPageTitle>
 
@@ -80,7 +80,7 @@ export default ({}) => {
                     to: `./${id}`
                   };
                   return (
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <Grid item xs={12} sm={6}>
                       <ItemCard item={item} />
                     </Grid>
                   );
@@ -93,8 +93,7 @@ export default ({}) => {
             </ServerError>
           </>
         )}
-
-        <FloatingAdd tooltip="Add new item" onClick={handleAddButton} />
+        {menuItems.length < 1 && <FloatingAdd tooltip="Add new item" onClick={handleAddButton} />}
       </Container>
     </Page>
   );

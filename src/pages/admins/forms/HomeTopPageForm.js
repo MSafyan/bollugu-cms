@@ -4,7 +4,6 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 /*
 	Imports:
 		Material UI
@@ -15,6 +14,8 @@ import {
   CircularProgress,
   Grid,
   InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography
 } from '@material-ui/core';
@@ -29,11 +30,12 @@ import AlertSnackbar from 'src/components/misc/alerts/AlertSnackbar';
 import Dialog from 'src/components/misc/alerts/Dialog';
 import ServerError from 'src/components/misc/alerts/ServerError';
 import LoadingFormButton from 'src/components/misc/Buttons/LoadingFormButton';
-import { RouteFavicons } from 'src/config/routes';
-import serviceService from 'src/services/FaviconServiceClass';
-import { acceptFileUpload } from '../../../config/settings';
+import { RouteFavicons, RouteHomeTopPage } from 'src/config/routes';
+import serviceService from 'src/services/HomeTopServiceClass';
+import { acceptFileUpload, textPositions } from '../../../config/settings';
 import { ContentStyle, FormTheme } from '../../../theme/form-pages';
-import { FaviconItemSchema } from 'src/config/form-schemas';
+import { HomeTopItemSchema } from 'src/config/form-schemas';
+import { SelectPosition } from './Selects';
 
 /*
 	Main Working
@@ -45,8 +47,8 @@ export default ({ menuItem, editing }) => {
   const [serverError, setServerError] = useState('');
   const [openDia, setOpenDia] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState(menuItem?.file?.url);
-  const [imageID, setImageID] = useState(menuItem?.file?.id);
+  const [imageUrl, setImageUrl] = useState(menuItem?.images_list?.url);
+  const [imageID, setImageID] = useState(menuItem?.images_list?.id);
   const [wrongFile, setWrongFile] = useState(false);
 
   const navigate = useNavigate();
@@ -56,10 +58,11 @@ export default ({ menuItem, editing }) => {
 	*/
   const formik = useFormik({
     initialValues: {
-      width: menuItem?.width ?? '',
-      height: menuItem?.height ?? ''
+      text_three: menuItem?.text_three ?? '',
+      text_three_type: menuItem?.text_three_type ?? '',
+      template_order: menuItem?.template_order ?? ''
     },
-    validationSchema: FaviconItemSchema,
+    validationSchema: HomeTopItemSchema,
     onSubmit: (_values, { setFieldError }) => {
       setSubmitting(true);
       addData();
@@ -78,7 +81,7 @@ export default ({ menuItem, editing }) => {
 
     const data = {
       ...values,
-      file: imageID
+      images_list: imageID
     };
 
     FunctionToCall(data, menuItem?.id)
@@ -94,7 +97,7 @@ export default ({ menuItem, editing }) => {
 
   const handleClose = () => {
     setOpenDia(false);
-    navigate(RouteFavicons);
+    navigate(RouteHomeTopPage);
   };
 
   const handleImageChange = () => {
@@ -127,42 +130,54 @@ export default ({ menuItem, editing }) => {
   /*
 		Main Design
 	*/
+  const title = 'Home Top Page';
   return (
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Typography variant="h6" gutterBottom>
-          Background Details
+          {title} Details
         </Typography>
 
         <ContentStyle>
           <Grid container spacing={3}>
             <Grid item sm={6} md={3}>
               <ThemeProvider theme={FormTheme}>
-                <InputLabel>Height</InputLabel>
+                <InputLabel>Order</InputLabel>
               </ThemeProvider>
               <TextField
                 fullWidth
-                autoComplete="height"
-                {...getFieldProps('height')}
-                error={Boolean(touched.height && errors.height)}
-                helperText={touched.height && errors.height}
+                autoComplete="template_order"
+                {...getFieldProps('template_order')}
+                error={Boolean(touched.template_order && errors.template_order)}
+                helperText={touched.template_order && errors.template_order}
               />
             </Grid>
-            <Grid item sm={6} md={3}>
+            <Grid item sm={12} md={9}>
               <ThemeProvider theme={FormTheme}>
-                <InputLabel>Width</InputLabel>
+                <InputLabel>Meta Description</InputLabel>
               </ThemeProvider>
               <TextField
+                multiline
+                rows={4}
                 fullWidth
-                autoComplete="width"
-                {...getFieldProps('width')}
-                error={Boolean(touched.width && errors.width)}
-                helperText={touched.width && errors.width}
+                autoComplete="text_three"
+                {...getFieldProps('text_three')}
+                error={Boolean(touched.text_three && errors.text_three)}
+                helperText={touched.text_three && errors.text_three}
+              />
+            </Grid>
+            <Grid item sm={12} md={3}>
+              <SelectPosition
+                getFieldProps={getFieldProps}
+                fieldName="text_three_type"
+                label="Text Position"
+                touched={touched}
+                errors={errors}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
               <input
-                disabled={(values.width.length || values.height.length) < 2}
+                disabled={values.template_order.length < 1}
                 accept={acceptFileUpload}
                 type="file"
                 id="select-image"
@@ -171,7 +186,7 @@ export default ({ menuItem, editing }) => {
               />
               <label htmlFor="select-image">
                 <Button
-                  disabled={(values.width.length || values.height.length) < 2}
+                  disabled={values.template_order.length < 1}
                   variant="outlined"
                   color="primary"
                   component="span"
@@ -198,7 +213,7 @@ export default ({ menuItem, editing }) => {
         </ContentStyle>
 
         <Dialog buttonText={'Close'} openDialog={openDia} handleButton={handleClose}>
-          {editing ? 'Favicon updated' : `Favicon is added`}
+          {editing ? `${title} updated` : `${title} is added`}
         </Dialog>
         <AlertSnackbar severity="warning" open={wrongFile}>
           File type not allowed

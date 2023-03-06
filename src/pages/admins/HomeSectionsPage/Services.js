@@ -7,13 +7,13 @@ import { Children, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ServerError from 'src/components/misc/alerts/ServerError';
 import FloatingAdd from 'src/components/misc/Buttons/FloatingAdd';
-import ItemCard from 'src/components/misc/cards/FaviconCard';
+import AddTemplateCard from 'src/components/misc/cards/AddTemplateCard';
+import ItemCard from 'src/components/misc/cards/HomeSectionPagesCard';
+import ServiceCard from 'src/components/misc/cards/HomeServicePagesCard';
 import CenterLoading from 'src/components/misc/CenterLoading';
 import ListPageTitle from 'src/components/misc/ListPageTitle';
-import { DefaultFood } from 'src/config/settings';
-import serviceService from 'src/services/FaviconServiceClass';
+import serviceService from 'src/services/HomeSectionsServiceClass';
 import Page from '../../../components/Page';
-import userService from 'src/services/UserService';
 
 /*
   Main Working
@@ -37,9 +37,8 @@ export default ({}) => {
   const getData = async () => {
     setLoading(true);
 
-    const user = userService.getLoggedInUser();
     serviceService
-      .getAll(user.id)
+      .getAll()
       .then((response) => {
         setmenuItems(response);
       })
@@ -51,7 +50,7 @@ export default ({}) => {
         setLoading(false);
       });
   };
-  const title = 'favicons';
+  const title = 'Home Sections ';
   /*
     Use Effect Hooks.
   */
@@ -69,24 +68,36 @@ export default ({}) => {
           <CenterLoading />
         ) : (
           <>
-            <Grid container spacing={3} alignItems="stretch">
-              {Children.toArray(
-                menuItems.map((menuItem) => {
-                  const { id, width, height, file } = menuItem;
-                  let item = {
-                    width,
-                    height,
-                    file: file?.url || DefaultFood,
-                    to: `./${id}`
-                  };
-                  return (
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                      <ItemCard item={item} />
+            {Children.toArray(
+              menuItems.map((service) => {
+                const { id: serviceId } = service;
+                return (
+                  <>
+                    <Grid container spacing={3} alignItems="stretch" sx={{ mb: 2 }}>
+                      <Grid item xs={12} sm={9}>
+                        <ServiceCard item={service} />
+                      </Grid>
+                      <Grid item xs={3}>
+                        <AddTemplateCard to={`template/add/${service.id}`} />
+                      </Grid>
+                      {service.templates.map((template) => {
+                        const { id, images_list } = template;
+                        let item = {
+                          ...template,
+                          images_list: images_list?.[0]?.url,
+                          to: `template/${id}/edit/${serviceId}`
+                        };
+                        return (
+                          <Grid item xs={12} sm={6} md={4} lg={3}>
+                            <ItemCard item={item} />
+                          </Grid>
+                        );
+                      })}
                     </Grid>
-                  );
-                })
-              )}
-            </Grid>
+                  </>
+                );
+              })
+            )}
             <br />
             <ServerError open={menuItems.length < 1} severity="warning">
               No {title}.

@@ -37,10 +37,10 @@ export default ({}) => {
   const getData = async () => {
     setLoading(true);
 
-    const user = userService.getLoggedInUser();
     serviceService
       .getAll()
       .then((response) => {
+        debugger;
         setmenuItems(response);
       })
       .catch((err) => {
@@ -75,7 +75,7 @@ export default ({}) => {
                   const { id } = menuItem;
                   let item = {
                     ...menuItem,
-                    image: menuItem?.image.url || DefaultFood,
+                    image: menuItem?.image_url?.url || DefaultFood,
                     to: `./${id}`
                   };
                   return (

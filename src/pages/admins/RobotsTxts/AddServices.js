@@ -13,12 +13,14 @@ import { Container } from '@material-ui/core';
 		Our Imports
 		Components and Settings
 */
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CenterLoading from 'src/components/misc/CenterLoading';
 import ListPageTitle from 'src/components/misc/ListPageTitle';
 import Page from 'src/components/Page';
 import robotsTxtService from 'src/services/RobotsTxtServiceClass';
 import AddServiceForm from '../forms/AddRobotsTxtForm';
+import { Button } from '@mui/material';
+import { RouteRobots } from 'src/config/routes';
 
 /*
 	Main Working
@@ -53,6 +55,21 @@ export default ({ editing }) => {
   useEffect(() => {
     getItem();
   }, []);
+  const navigate = useNavigate();
+
+  const handleRemove = () => {
+    debugger;
+    if (id && editing) {
+      robotsTxtService
+        .remove(id)
+        .then((data) => {
+          navigate(RouteRobots);
+        })
+        .catch(() => {
+          console.error('Error in getting item', id);
+        });
+    }
+  };
 
   /*
 	  Main Design
@@ -64,7 +81,9 @@ export default ({ editing }) => {
           <CenterLoading />
         ) : (
           <>
-            <ListPageTitle>{editing ? 'Edit' : 'Add'} Service</ListPageTitle>
+            <ListPageTitle handleRemove={handleRemove} editing={editing}>
+              {editing ? 'Edit' : 'Add'} Service
+            </ListPageTitle>
             <AddServiceForm menuItem={item} editing={editing} />
           </>
         )}

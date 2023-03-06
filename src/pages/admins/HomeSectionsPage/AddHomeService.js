@@ -17,35 +17,21 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CenterLoading from 'src/components/misc/CenterLoading';
 import ListPageTitle from 'src/components/misc/ListPageTitle';
 import Page from 'src/components/Page';
-import serviceService from 'src/services/WorkServiceClass';
-import AddServiceForm from '../forms/WorkForm';
-import { RouteWork } from 'src/config/routes';
+import serviceService from 'src/services/HomeSectionsServiceClass';
+import AddServiceForm from '../forms/HomeServicePageForm';
+import { RoutehomeSectionsPage } from 'src/config/routes';
 
 /*
 	Main Working
 */
-const pagetitle = 'Work';
+const title = 'Home Sections';
 export default ({ editing }) => {
   /*
 	  States, Params, Navigation, Query, Variables.
 	*/
   const [item, setItem] = useState(null);
   const id = useParams().id;
-
   const navigate = useNavigate();
-
-  const handleRemove = () => {
-    if (id && editing) {
-      serviceService
-        .remove(id)
-        .then((data) => {
-          navigate(RouteWork);
-        })
-        .catch(() => {
-          console.error('Error in getting item', id);
-        });
-    }
-  };
 
   /*
 	  Handlers, Functions
@@ -54,7 +40,7 @@ export default ({ editing }) => {
   function getItem() {
     if (id && editing) {
       serviceService
-        .getOne(id)
+        .getOneService(id)
         .then((data) => {
           setItem(data);
         })
@@ -63,6 +49,19 @@ export default ({ editing }) => {
         });
     }
   }
+
+  const handleRemove = () => {
+    if (id && editing) {
+      serviceService
+        .removeService(id)
+        .then((data) => {
+          navigate(RoutehomeSectionsPage);
+        })
+        .catch(() => {
+          console.error('Error in getting item', id);
+        });
+    }
+  };
 
   /*
 	  Use Effect Hooks.
@@ -75,14 +74,14 @@ export default ({ editing }) => {
 	  Main Design
 	*/
   return (
-    <Page title={`${editing ? 'Edit' : 'Add'} ${pagetitle}`}>
+    <Page title={`${editing ? 'Edit' : 'Add'} ${title}`}>
       <Container maxWidth="xl">
         {!item && id && editing ? (
           <CenterLoading />
         ) : (
           <>
             <ListPageTitle handleRemove={handleRemove} editing={editing}>
-              {editing ? 'Edit' : 'Add'} {pagetitle}
+              {editing ? 'Edit' : 'Add'} {title}
             </ListPageTitle>
             <AddServiceForm menuItem={item} editing={editing} />
           </>

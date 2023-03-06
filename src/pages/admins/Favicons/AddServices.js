@@ -13,12 +13,13 @@ import { Container } from '@material-ui/core';
 		Our Imports
 		Components and Settings
 */
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CenterLoading from 'src/components/misc/CenterLoading';
 import ListPageTitle from 'src/components/misc/ListPageTitle';
 import Page from 'src/components/Page';
 import serviceService from 'src/services/FaviconServiceClass';
 import AddServiceForm from '../forms/AddFaviconForm';
+import { RouteFavicons } from 'src/config/routes';
 
 /*
 	Main Working
@@ -33,6 +34,21 @@ export default ({ editing }) => {
   /*
 	  Handlers, Functions
 	*/
+
+  const navigate = useNavigate();
+
+  const handleRemove = () => {
+    if (id && editing) {
+      serviceService
+        .remove(id)
+        .then((data) => {
+          navigate(RouteFavicons);
+        })
+        .catch(() => {
+          console.error('Error in getting item', id);
+        });
+    }
+  };
 
   function getItem() {
     if (id && editing) {
@@ -64,7 +80,9 @@ export default ({ editing }) => {
           <CenterLoading />
         ) : (
           <>
-            <ListPageTitle>{editing ? 'Edit' : 'Add'} Favicon</ListPageTitle>
+            <ListPageTitle handleRemove={handleRemove} editing={editing}>
+              {editing ? 'Edit' : 'Add'} Favicon
+            </ListPageTitle>
             <AddServiceForm menuItem={item} editing={editing} />
           </>
         )}

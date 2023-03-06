@@ -2,7 +2,7 @@ import qs from 'qs';
 import GenericService from './GenericService';
 import otherService from './OtherServiceClass';
 
-const title = 'backgrounds';
+const title = 'templates';
 
 class MenuService extends GenericService {
   constructor() {
@@ -13,28 +13,35 @@ class MenuService extends GenericService {
   extractData(data) {
     const { id, attributes } = data;
 
+    var templates = attributes.templates.data.map((_) => {
+      return this.extractTemplate(_);
+    });
+
     return {
       id,
-      ...attributes
+      ...attributes,
+      templates
     };
   }
 
-  getAll = () =>
-    new Promise((resolve, reject) => {
-      const query = qs.stringify({
-        populate: '*',
-        pagniation: {
-          pageSize: 1000
-        }
-      });
-      this.get(`${title}?${query}`)
+  extractTemplate(data) {
+    const { id, attributes } = data;
+    const { images_list: files } = attributes;
+    let fileArry;
 
-        .then((response) => {
-          console.log('Service', this.getService(response));
-          resolve(this.getService(response));
-        })
-        .catch((err) => reject(err));
-    });
+    if (files) {
+      const { data: file_data } = files;
+      if (file_data)
+        fileArry = file_data.map((image) => {
+          return otherService.extractFile(image);
+        });
+    }
+    return {
+      id,
+      ...attributes,
+      images_list: fileArry
+    };
+  }
 
   getOne = (id) =>
     new Promise((resolve, reject) => {
@@ -44,8 +51,8 @@ class MenuService extends GenericService {
       this.get(`${title}/${id}?${query}`)
 
         .then((response) => {
-          console.log('Menu Item', this.extractData(response.data));
-          resolve(this.extractData(response.data));
+          console.log('Menu Item', this.extractTemplate(response.data));
+          resolve(this.extractTemplate(response.data));
         })
         .catch((err) => reject(err));
     });
@@ -57,20 +64,22 @@ class MenuService extends GenericService {
       })
     );
 
-  update = (data, id) =>
-    Promise.resolve(
+  update = (data, id) => {
+    debugger;
+    return Promise.resolve(
       this.put(`${title}/${id}`, {
         data
       })
     );
+  };
 
   getService(response) {
     const { data } = response;
     console.log(
       'Data',
-      data.map((noti) => this.extractData(noti))
+      data.map((noti) => this.extractTemplate(noti))
     );
-    return data.map((noti) => this.extractData(noti));
+    return data.map((noti) => this.extractTemplate(noti));
   }
 
   remove = (ID) => this.delete(`${title}/${ID}`);

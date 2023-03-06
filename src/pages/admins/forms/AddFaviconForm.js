@@ -66,8 +66,16 @@ export default ({ menuItem, editing }) => {
     }
   });
 
-  const { values, errors, touched, isSubmitting, handleSubmit, getFieldProps, setSubmitting } =
-    formik;
+  const {
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    handleSubmit,
+    getFieldProps,
+    setSubmitting,
+    setFieldValue
+  } = formik;
 
   /*
 		Handlers
@@ -160,6 +168,7 @@ export default ({ menuItem, editing }) => {
                 helperText={touched.width && errors.width}
               />
             </Grid>
+
             <Grid item xs={12} sm={6} md={6}>
               <input
                 disabled={(values.width.length || values.height.length) < 2}

@@ -31,12 +31,12 @@ export const sidebarConfig = {
   admin: [
     {
       title: 'HOME TOP PAGE',
-      path: RoutehomeSectionsPage,
+      path: RouteHomeTopPage,
       icon: getIcon(RoutehomeSectionsPage)
     },
     {
       title: 'HOME SECTION PAGES',
-      path: RouteHomeTopPage,
+      path: RoutehomeSectionsPage,
       icon: getIcon(RouteHomeTopPage)
     },
     {

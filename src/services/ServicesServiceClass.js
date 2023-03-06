@@ -1,6 +1,9 @@
 import qs from 'qs';
 import GenericService from './GenericService';
 import otherService from './OtherServiceClass';
+import templateService from './TemplateClass';
+
+const title = 'services';
 
 class MenuService extends GenericService {
   constructor() {
@@ -13,34 +16,36 @@ class MenuService extends GenericService {
 
     const { svg: file_obj } = attributes;
 
-    let svg;
+    let formatted;
     if (file_obj) {
       const { data: file_data } = file_obj;
-      if (file_data) svg = otherService.extractFile(file_data);
+      if (file_data) formatted = otherService.extractFile(file_data);
     }
+    debugger;
+    var tempData = attributes.template?.data;
+    if (tempData) var template = templateService.extractTemplate(tempData);
 
     return {
       id,
       ...attributes,
-      svg
+      template: template ?? {},
+      svg: formatted
     };
   }
 
-  getAll = (chef) =>
+  getAll = () =>
     new Promise((resolve, reject) => {
       const query = qs.stringify({
-        filters: {
-          chef
-        },
-        populate: '*',
+        populate: ['template', 'svg', 'template.images_list'],
+        sort: 'order:asc',
         pagniation: {
           pageSize: 1000
         }
       });
-      this.get(`services?${query}`)
-
+      this.get(`${title}?${query}`)
         .then((response) => {
-          console.log('Service', this.getService(response));
+          console.log('services', this.getService(response));
+
           resolve(this.getService(response));
         })
         .catch((err) => reject(err));
@@ -49,9 +54,23 @@ class MenuService extends GenericService {
   getOne = (id) =>
     new Promise((resolve, reject) => {
       const query = qs.stringify({
+        populate: ['template', 'svg', 'template.images_list']
+      });
+      this.get(`${title}/${id}?${query}`)
+
+        .then((response) => {
+          console.log('Menu Item', this.extractData(response.data));
+          resolve(this.extractData(response.data));
+        })
+        .catch((err) => reject(err));
+    });
+
+  getOneService = (id) =>
+    new Promise((resolve, reject) => {
+      const query = qs.stringify({
         populate: '*'
       });
-      this.get(`services/${id}?${query}`)
+      this.get(`${services}/${id}?${query}`)
 
         .then((response) => {
           console.log('Menu Item', this.extractData(response.data));
@@ -62,14 +81,28 @@ class MenuService extends GenericService {
 
   add = (data) =>
     Promise.resolve(
-      this.post(`services`, {
+      this.post(`${title}`, {
+        data
+      })
+    );
+
+  addservice = (data) =>
+    Promise.resolve(
+      this.post(`${services}`, {
         data
       })
     );
 
   update = (data, id) =>
     Promise.resolve(
-      this.put(`services/${id}`, {
+      this.put(`${title}/${id}`, {
+        data
+      })
+    );
+
+  updateService = (data, id) =>
+    Promise.resolve(
+      this.put(`${services}/${id}`, {
         data
       })
     );
@@ -83,7 +116,7 @@ class MenuService extends GenericService {
     return data.map((noti) => this.extractData(noti));
   }
 
-  remove = (ID) => this.delete(`Menu/${ID}`);
+  remove = (ID) => this.delete(`${title}/${ID}`);
 }
 
 const menuService = new MenuService();

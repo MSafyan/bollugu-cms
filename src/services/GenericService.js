@@ -90,7 +90,7 @@ class GenericService {
         });
     });
 
-  upload(file, name, onUploadProgress) {
+  upload(file, name = '', onUploadProgress) {
     let formData = new FormData();
     let extension = file.name.split('.');
     extension = extension[extension.length - 1];

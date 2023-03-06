@@ -81,7 +81,7 @@ class MenuService extends GenericService {
     return data.map((noti) => this.extractData(noti));
   }
 
-  remove = (ID) => this.delete(`Menu/${ID}`);
+  remove = (ID) => this.delete(`${title}/${ID}`);
 }
 
 const menuService = new MenuService();

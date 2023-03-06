@@ -60,10 +60,11 @@ export default ({}) => {
   /*
     Main Design
   */
+  const title = 'Services';
   return (
-    <Page title={`Services`}>
+    <Page title={title}>
       <Container>
-        <ListPageTitle>Services</ListPageTitle>
+        <ListPageTitle>{title}</ListPageTitle>
 
         {loading ? (
           <CenterLoading />
@@ -88,7 +89,7 @@ export default ({}) => {
             </Grid>
             <br />
             <ServerError open={menuItems.length < 1} severity="warning">
-              No Services.
+              No {title}.
             </ServerError>
           </>
         )}

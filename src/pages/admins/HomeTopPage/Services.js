@@ -7,11 +7,11 @@ import { Children, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ServerError from 'src/components/misc/alerts/ServerError';
 import FloatingAdd from 'src/components/misc/Buttons/FloatingAdd';
-import ItemCard from 'src/components/misc/cards/FaviconCard';
+import ItemCard from 'src/components/misc/cards/HomeTopPageCard';
 import CenterLoading from 'src/components/misc/CenterLoading';
 import ListPageTitle from 'src/components/misc/ListPageTitle';
 import { DefaultFood } from 'src/config/settings';
-import serviceService from 'src/services/FaviconServiceClass';
+import serviceService from 'src/services/HomeTopServiceClass';
 import Page from '../../../components/Page';
 import userService from 'src/services/UserService';
 
@@ -39,7 +39,7 @@ export default ({}) => {
 
     const user = userService.getLoggedInUser();
     serviceService
-      .getAll(user.id)
+      .getAll()
       .then((response) => {
         setmenuItems(response);
       })
@@ -51,7 +51,7 @@ export default ({}) => {
         setLoading(false);
       });
   };
-  const title = 'favicons';
+  const title = 'Home Top';
   /*
     Use Effect Hooks.
   */
@@ -72,11 +72,10 @@ export default ({}) => {
             <Grid container spacing={3} alignItems="stretch">
               {Children.toArray(
                 menuItems.map((menuItem) => {
-                  const { id, width, height, file } = menuItem;
+                  const { id, images_list } = menuItem;
                   let item = {
-                    width,
-                    height,
-                    file: file?.url || DefaultFood,
+                    ...menuItem,
+                    images_list: images_list?.url || DefaultFood,
                     to: `./${id}`
                   };
                   return (

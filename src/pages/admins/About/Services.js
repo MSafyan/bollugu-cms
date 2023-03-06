@@ -136,7 +136,7 @@ export default ({}) => {
           </>
         )}
 
-        <FloatingAdd tooltip="Add new item" onClick={handleAddButton} />
+        {menuItems.length < 1 && <FloatingAdd tooltip="Add new item" onClick={handleAddButton} />}
       </Container>
     </Page>
   );

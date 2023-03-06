@@ -2,7 +2,7 @@ import qs from 'qs';
 import GenericService from './GenericService';
 import otherService from './OtherServiceClass';
 
-const title = 'backgrounds';
+const title = 'templates';
 
 class MenuService extends GenericService {
   constructor() {
@@ -12,26 +12,37 @@ class MenuService extends GenericService {
 
   extractData(data) {
     const { id, attributes } = data;
-
+    const { images_list: file_obj } = attributes;
+    let file;
+    if (file_obj) {
+      const { data: file_data } = file_obj;
+      if (file_data) file = otherService.extractFile(file_data[0]);
+    }
     return {
       id,
-      ...attributes
+      ...attributes,
+      images_list: file
     };
   }
 
   getAll = () =>
     new Promise((resolve, reject) => {
       const query = qs.stringify({
-        populate: '*',
+        populate: ['templates', 'templates.images_list'],
+        filters: {
+          order: {
+            $eq: 1
+          }
+        },
         pagniation: {
           pageSize: 1000
         }
       });
-      this.get(`${title}?${query}`)
-
+      this.get(`services?${query}`)
         .then((response) => {
-          console.log('Service', this.getService(response));
-          resolve(this.getService(response));
+          var templates = response.data[0].attributes.templates;
+          console.log('Templates', this.getService(templates));
+          resolve(this.getService(templates));
         })
         .catch((err) => reject(err));
     });

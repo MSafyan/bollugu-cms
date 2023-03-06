@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import palette from 'src/theme/palette';
 import { FoodPicture } from './FoodPicture';
+import { ShowFileContent } from './SitemapCard';
 
 export default ({ item }) => {
   const { title, file, to } = item;
@@ -16,11 +17,9 @@ export default ({ item }) => {
         onMouseEnter={() => setMouse(true)}
         onMouseLeave={() => setMouse(false)}
       >
-        <Box sx={{ pt: '100%', position: 'relative' }}>
-          <FoodPicture alt={file} src={file} />
-        </Box>
-
         <Stack spacing={1} sx={{ p: 3 }}>
+          <ShowFileContent file={file} digits={100} />
+
           <Typography variant="h5" noWrap>
             {title ?? 'Food Name Here'}
           </Typography>

@@ -39,7 +39,6 @@ class MenuService extends GenericService {
       this.get(`${title}?${query}`)
 
         .then((response) => {
-          console.log('Service', this.getService(response));
           resolve(this.getService(response));
         })
         .catch((err) => reject(err));

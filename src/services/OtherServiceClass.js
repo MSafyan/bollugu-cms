@@ -2,11 +2,9 @@ import qs from 'qs';
 import GenericService from './GenericService';
 
 class OtherServiceClass extends GenericService {
-
   extractFile(data) {
     const { id, attributes } = data;
     const { name, ext, url, createdAt } = attributes;
-
     return {
       id,
       name,
@@ -28,7 +26,6 @@ class OtherServiceClass extends GenericService {
     };
   }
 }
-
 
 const otherService = new OtherServiceClass();
 export default otherService;

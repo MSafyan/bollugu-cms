@@ -33,6 +33,7 @@ class MenuService extends GenericService {
       this.get(`${title}?${query}`)
 
         .then((response) => {
+          debugger;
           console.log('Service', this.getService(response));
           resolve(this.getService(response));
         })
@@ -76,7 +77,7 @@ class MenuService extends GenericService {
     return data.map((noti) => this.extractData(noti));
   }
 
-  remove = (ID) => this.delete(`Menu/${ID}`);
+  remove = (ID) => this.delete(`${title}/${ID}`);
 }
 
 const menuService = new MenuService();

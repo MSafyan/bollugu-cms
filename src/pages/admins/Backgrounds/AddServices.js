@@ -13,12 +13,13 @@ import { Container } from '@material-ui/core';
 		Our Imports
 		Components and Settings
 */
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CenterLoading from 'src/components/misc/CenterLoading';
 import ListPageTitle from 'src/components/misc/ListPageTitle';
 import Page from 'src/components/Page';
 import serviceService from 'src/services/BackgroudServiceClass';
 import AddServiceForm from '../forms/AddBackgroundForm';
+import { RouteBackgrouns } from 'src/config/routes';
 
 /*
 	Main Working
@@ -29,10 +30,20 @@ export default ({ editing }) => {
 	*/
   const [item, setItem] = useState(null);
   const id = useParams().id;
+  const navigate = useNavigate();
 
-  /*
-	  Handlers, Functions
-	*/
+  const handleRemove = () => {
+    if (id && editing) {
+      serviceService
+        .remove(id)
+        .then((data) => {
+          navigate(RouteBackgrouns);
+        })
+        .catch(() => {
+          console.error('Error in getting item', id);
+        });
+    }
+  };
 
   function getItem() {
     if (id && editing) {
@@ -64,7 +75,9 @@ export default ({ editing }) => {
           <CenterLoading />
         ) : (
           <>
-            <ListPageTitle>{editing ? 'Edit' : 'Add'} Background</ListPageTitle>
+            <ListPageTitle handleRemove={handleRemove} editing={editing}>
+              {editing ? 'Edit' : 'Add'} Background
+            </ListPageTitle>
             <AddServiceForm menuItem={item} editing={editing} />
           </>
         )}

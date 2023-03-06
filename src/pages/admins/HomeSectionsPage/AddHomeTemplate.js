@@ -13,22 +13,27 @@ import { Container } from '@material-ui/core';
 		Our Imports
 		Components and Settings
 */
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CenterLoading from 'src/components/misc/CenterLoading';
 import ListPageTitle from 'src/components/misc/ListPageTitle';
 import Page from 'src/components/Page';
-import serviceService from 'src/services/FaviconServiceClass';
-import AddServiceForm from '../forms/AddFaviconForm';
+import serviceService from 'src/services/HomeSectionsServiceClass';
+import AddServiceForm from '../forms/HomeTemplateForm';
+import { RoutehomeSectionsPage } from 'src/config/routes';
 
 /*
 	Main Working
 */
+const title = 'Home Sections';
 export default ({ editing }) => {
   /*
 	  States, Params, Navigation, Query, Variables.
 	*/
   const [item, setItem] = useState(null);
   const id = useParams().id;
+  const serviceId = useParams().serviceId;
+
+  const navigate = useNavigate();
 
   /*
 	  Handlers, Functions
@@ -47,6 +52,19 @@ export default ({ editing }) => {
     }
   }
 
+  const handleRemove = () => {
+    if (id && editing) {
+      serviceService
+        .remove(id)
+        .then((data) => {
+          navigate(RoutehomeSectionsPage);
+        })
+        .catch(() => {
+          console.error('Error in getting item', id);
+        });
+    }
+  };
+
   /*
 	  Use Effect Hooks.
 	*/
@@ -58,14 +76,16 @@ export default ({ editing }) => {
 	  Main Design
 	*/
   return (
-    <Page title={`${editing ? 'Edit' : 'Add'} Favicon`}>
+    <Page title={`${editing ? 'Edit' : 'Add'} ${title}`}>
       <Container maxWidth="xl">
         {!item && id && editing ? (
           <CenterLoading />
         ) : (
           <>
-            <ListPageTitle>{editing ? 'Edit' : 'Add'} Favicon</ListPageTitle>
-            <AddServiceForm menuItem={item} editing={editing} />
+            <ListPageTitle handleRemove={handleRemove} editing={editing}>
+              {editing ? 'Edit' : 'Add'} {title}
+            </ListPageTitle>
+            <AddServiceForm menuItem={item} editing={editing} serviceId={serviceId} />
           </>
         )}
       </Container>

@@ -34,6 +34,7 @@ import { RouteServices, RouteSitemap } from 'src/config/routes';
 import serviceService from 'src/services/SitemapXmlServiceClass';
 import { acceptFileUpload, acceptImageUpload } from '../../../config/settings';
 import { ContentStyle, FormTheme } from '../../../theme/form-pages';
+import { ShowFileContent } from 'src/components/misc/cards/SitemapCard';
 
 /*
 	Main Working
@@ -95,6 +96,7 @@ export default ({ menuItem, editing }) => {
 
   const handleImageChange = () => {
     if (!selectedImage) return;
+    debugger;
     setWrongFile(false);
     setImageUrl(null);
     if (selectedImage) {
@@ -145,16 +147,7 @@ export default ({ menuItem, editing }) => {
                   Upload File
                 </Button>
               </label>
-              {imageUrl &&
-                (imageUrl ? (
-                  <Box mt={2} textAlign="center">
-                    <img src={imageUrl} alt={values.title} height="100px" />
-                  </Box>
-                ) : (
-                  <Box mt={2} textAlign="center">
-                    <CircularProgress color="primary" />
-                  </Box>
-                ))}
+              <ShowFileContent file={selectedImage} />
             </Grid>
           </Grid>
         </ContentStyle>
